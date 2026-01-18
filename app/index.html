@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ConciergePay App Demo</title>
+    <title>ConciergePay App</title>
     <style>
         /* --- SYSTEM APP PREMIUM --- */
         :root { --bg: #000000; --surface: #121212; --text: #FFFFFF; --text-sub: #999; --gold: #D4AF37; --success: #34C759; }
@@ -11,111 +11,194 @@
         
         .screen-container { flex: 1; position: relative; overflow: hidden; }
         .screen { display: none; padding: 20px; height: 100%; overflow-y: auto; box-sizing: border-box; padding-bottom: 80px; }
-        .screen.active { display: block; animation: fade 0.3s; }
-        @keyframes fade { from { opacity:0; } to { opacity:1; } }
+        .screen.active { display: flex; flex-direction: column; animation: fade 0.4s; }
+        @keyframes fade { from { opacity:0; transform: scale(0.98); } to { opacity:1; transform: scale(1); } }
 
-        /* HEADER */
+        /* UI ELEMENTS */
+        .btn { width: 100%; padding: 16px; background: var(--gold); border: none; border-radius: 12px; font-weight: 700; font-size: 16px; margin-top: 20px; cursor: pointer; color: #000; }
+        .input { width: 100%; padding: 16px; background: #222; border: 1px solid #333; border-radius: 12px; color: white; margin-bottom: 10px; outline: none; }
+        .input:focus { border-color: var(--gold); }
+
+        /* HEADER & DASHBOARD */
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .avatar { width:32px; height:32px; background:var(--gold); border-radius:50%; color:#000; font-weight:700; display:flex; align-items:center; justify-content:center; font-size:12px; }
         
-        /* CARDS */
-        .card { background: var(--surface); border-radius: 16px; padding: 20px; margin-bottom: 15px; border: 1px solid #222; }
-        .chart-placeholder { height: 120px; display: flex; align-items: flex-end; gap: 6px; padding-top: 20px; }
+        /* AI CARD */
+        .ai-card { background: linear-gradient(135deg, #1f1f1f, #121212); border: 1px solid #333; border-radius: 16px; padding: 20px; margin-bottom: 20px; cursor: pointer; position: relative; overflow: hidden; }
+        .ai-card:active { transform: scale(0.98); }
+        .ai-badge { font-size: 10px; background: rgba(212, 175, 55, 0.2); color: var(--gold); padding: 4px 8px; border-radius: 6px; font-weight: 800; display: inline-block; margin-bottom: 8px; }
+
+        /* ACTIONS ROW (SCANNER) */
+        .actions { display: flex; gap: 15px; margin-bottom: 25px; }
+        .action-btn { flex: 1; background: #1c1c1e; padding: 15px; border-radius: 14px; text-align: center; cursor: pointer; border: 1px solid #2a2a2a; transition: 0.2s; }
+        .action-btn:active { border-color: var(--gold); background: #222; }
+        .plus-icon { font-size: 24px; color: var(--gold); display: block; margin-bottom: 5px; }
+        .action-label { font-size: 11px; color: #888; font-weight: 600; }
+
+        /* CHART */
+        .card { background: var(--surface); border-radius: 16px; padding: 20px; margin-bottom: 20px; border: 1px solid #222; }
+        .chart-placeholder { height: 100px; display: flex; align-items: flex-end; gap: 6px; padding-top: 20px; }
         .bar { flex: 1; background: #333; border-radius: 4px 4px 0 0; transition: 0.3s; }
         .bar.active { background: var(--gold); box-shadow: 0 0 10px rgba(212, 175, 55, 0.4); }
 
-        /* LISTS */
-        h3 { font-size: 14px; color: var(--text-sub); margin: 25px 0 10px; text-transform: uppercase; letter-spacing: 1px; }
-        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #222; }
-        .item-icon { width: 36px; height: 36px; background: #222; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
-        
+        /* LIST */
+        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #222; cursor: pointer; }
+        .item-icon { width: 40px; height: 40px; background: #fff; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 2px; }
+        .item-icon img { width: 100%; height: 100%; object-fit: contain; border-radius: 8px; }
+
         /* NAV */
         .nav { height: 70px; background: rgba(18,18,18,0.95); backdrop-filter: blur(10px); border-top: 1px solid #222; display: flex; justify-content: space-around; align-items: center; position: fixed; bottom: 0; width: 100%; }
         .nav-item { opacity: 0.4; cursor: pointer; transition: 0.2s; text-align: center; }
         .nav-item.active { opacity: 1; color: var(--gold); }
-        .nav-label { font-size: 10px; display: block; margin-top: 4px; }
     </style>
 </head>
 <body>
 
     <div class="screen-container">
-        <div id="screen-stats" class="screen active">
+        
+        <div id="screen-login" class="screen active" style="justify-content: center; align-items: center; text-align: center;">
+            <img src="../assets/conciergepaylogo.png" width="80" style="margin-bottom: 20px; opacity: 0.8;" onerror="this.style.display='none'">
+            <h1 style="font-size: 24px; margin-bottom: 10px;">Witaj ponownie</h1>
+            <p style="color: #666; margin-bottom: 30px; font-size: 14px;">Zaloguj się, aby zarządzać finansami.</p>
+            
+            <input type="email" class="input" value="inwestor@concierge.com" readonly>
+            <input type="password" class="input" value="********" readonly>
+            
+            <button class="btn" onclick="handleLogin()">Zaloguj się</button>
+            <p style="margin-top: 20px; font-size: 12px; color: var(--gold);">Face ID zweryfikowane 🔓</p>
+        </div>
+
+        <div id="screen-dashboard" class="screen">
             <div class="header">
-                <h2>Twoje Finanse</h2>
-                <div class="avatar">AK</div>
+                <div>
+                    <div style="font-size:12px; color:#888;">DZIEŃ DOBRY</div>
+                    <div style="font-size:20px; font-weight:700;">Alex 👋</div>
+                </div>
+                <div class="avatar" onclick="switchTab('screen-profile', document.getElementById('nav-profile'))">AK</div>
+            </div>
+
+            <div class="ai-card" onclick="alert('🤖 AI ANALIZA:\n\nZnaleziono lepszą ofertę prądu.\nOperator: E.ON\nOszczędność: 450 PLN/rok\n\nKliknij OK, aby zmienić umowę automatycznie.')">
+                <div class="ai-badge">✨ CONCIERGE AI</div>
+                <div style="font-size:13px; color:#ccc; margin-bottom:5px;">Masz nową rekomendację oszczędności.</div>
+                <div style="font-size:24px; font-weight:700; color:var(--gold);">+450 PLN / rok</div>
+            </div>
+
+            <div class="actions">
+                <div class="action-btn" onclick="simulateScan()">
+                    <span class="plus-icon">+</span>
+                    <span class="action-label">Dodaj / Skanuj</span>
+                </div>
+                <div class="action-btn" onclick="alert('Łączę z Play24...')">
+                    <span class="plus-icon">⚡</span>
+                    <span class="action-label">Integracje</span>
+                </div>
             </div>
             
             <div class="card">
-                <div style="font-size:12px; color:var(--text-sub);">Wydatki w tym miesiącu</div>
-                <div style="font-size:28px; font-weight:700; margin: 5px 0;">1 450,00 PLN</div>
+                <div style="font-size:12px; color:#888;">Wydatki (Ostatnie 7 dni)</div>
                 <div class="chart-placeholder">
-                    <div class="bar" style="height: 40%;"></div>
-                    <div class="bar" style="height: 60%;"></div>
                     <div class="bar" style="height: 30%;"></div>
-                    <div class="bar" style="height: 80%;"></div>
-                    <div class="bar active" style="height: 100%;"></div>
                     <div class="bar" style="height: 50%;"></div>
+                    <div class="bar" style="height: 40%;"></div>
+                    <div class="bar active" style="height: 85%;"></div>
+                    <div class="bar" style="height: 60%;"></div>
+                    <div class="bar" style="height: 45%;"></div>
                     <div class="bar" style="height: 70%;"></div>
                 </div>
             </div>
 
-            <h3>Ostatnie Transakcje</h3>
-            <div class="list-item">
-                <div style="display:flex; gap:12px; align-items:center;">
-                    <div class="item-icon" style="background:#e9f5ff; color:#007aff;">🛒</div>
-                    <div><div>Żabka</div><div style="font-size:12px; color:#666;">Zakupy</div></div>
+            <h3 style="font-size:12px; color:#666; text-transform:uppercase; margin-bottom:10px;">Ostatnie rachunki</h3>
+            <div id="transactions-list">
+                <div class="list-item" onclick="payBill(this, '55.00')">
+                    <div style="display:flex; gap:12px; align-items:center;">
+                        <div class="item-icon"><img src="../assets/play.png" onerror="this.src='https://via.placeholder.com/40'"></div>
+                        <div><div style="font-weight:600;">Play</div><div style="font-size:12px; color:#666;">Internet</div></div>
+                    </div>
+                    <div><span class="amount" style="font-weight:700;">-55,00 zł</span><span class="status" style="display:none; font-size:10px; color:var(--success);">Opłacono</span></div>
                 </div>
-                <div style="font-weight:600;">-45,20 zł</div>
-            </div>
-            <div class="list-item">
-                <div style="display:flex; gap:12px; align-items:center;">
-                    <div class="item-icon" style="background:#fff5e9; color:#ff9500;">⚡</div>
-                    <div><div>E.ON Polska</div><div style="font-size:12px; color:#666;">Rachunki</div></div>
+                <div class="list-item" onclick="payBill(this, '79.84')">
+                    <div style="display:flex; gap:12px; align-items:center;">
+                        <div class="item-icon"><img src="../assets/eonlogo.png" onerror="this.src='https://via.placeholder.com/40'"></div>
+                        <div><div style="font-weight:600;">E.ON</div><div style="font-size:12px; color:#666;">Energia</div></div>
+                    </div>
+                    <div><span class="amount" style="font-weight:700;">-79,84 zł</span><span class="status" style="display:none; font-size:10px; color:var(--success);">Opłacono</span></div>
                 </div>
-                <div style="font-weight:600;">-120,00 zł</div>
             </div>
         </div>
 
         <div id="screen-profile" class="screen">
-            <div style="text-align:center; margin:30px 0;">
+            <div style="text-align:center; margin-top:40px;">
                 <div class="avatar" style="width:80px; height:80px; font-size:24px; margin:0 auto 15px;">AK</div>
                 <h2>Alex Kowalski</h2>
-                <div style="color:var(--gold); font-size:12px; margin-top:5px;">⭐ Konto Premium</div>
-            </div>
-            
-            <h3>Ustawienia</h3>
-            <div class="list-item">
-                <div style="display:flex; gap:12px; align-items:center;">
-                    <div class="item-icon">💳</div>
-                    <div>Karty płatnicze</div>
+                <p style="color:var(--gold); font-size:12px;">Premium Member</p>
+                <div style="margin-top:30px; text-align:left;">
+                    <div class="list-item"><span>🔔 Powiadomienia</span><span style="color:var(--success)">Wł</span></div>
+                    <div class="list-item"><span>🔒 Face ID</span><span style="color:var(--success)">Wł</span></div>
+                    <div class="list-item" onclick="switchTab('screen-login', null); alert('Wylogowano')"><span style="color:red">Wyloguj się</span></div>
                 </div>
-                <div style="color:#666;">Visa •••• 4242</div>
-            </div>
-            <div class="list-item">
-                <div style="display:flex; gap:12px; align-items:center;">
-                    <div class="item-icon">🔔</div>
-                    <div>Powiadomienia</div>
-                </div>
-                <div style="color:var(--success);">Włączone</div>
             </div>
         </div>
     </div>
 
-    <div class="nav">
-        <div class="nav-item active" onclick="switchTab('screen-stats', this)">
-            <span style="font-size:20px;">📊</span><span class="nav-label">Analizy</span>
-        </div>
-        <div class="nav-item" onclick="switchTab('screen-profile', this)">
-            <span style="font-size:20px;">👤</span><span class="nav-label">Profil</span>
-        </div>
+    <div class="nav" id="main-nav" style="display:none;">
+        <div class="nav-item active" onclick="switchTab('screen-dashboard', this)"><span>🏠</span><span style="font-size:10px; display:block;">Start</span></div>
+        <div class="nav-item" onclick="switchTab('screen-profile', this)"><span>👤</span><span style="font-size:10px; display:block;">Profil</span></div>
     </div>
 
     <script>
-        function switchTab(id, el) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            el.classList.add('active');
+        // LOGOWANIE
+        function handleLogin() {
+            const btn = document.querySelector('.btn');
+            btn.innerHTML = "Weryfikacja...";
+            setTimeout(() => {
+                document.getElementById('screen-login').style.display = 'none';
+                document.getElementById('screen-dashboard').style.display = 'block';
+                document.getElementById('main-nav').style.display = 'flex';
+                // Animacja wejścia dashboardu
+                document.getElementById('screen-dashboard').classList.add('active');
+            }, 1000);
+        }
+
+        // NAWIGACJA
+        function switchTab(screenId, navItem) {
+            document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+            document.getElementById(screenId).style.display = 'block';
+            
+            if(navItem) {
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                navItem.classList.add('active');
+            }
+        }
+
+        // SYMULACJA SKANOWANIA
+        function simulateScan() {
+            if(confirm("📸 Uruchomić aparat, aby zeskanować fakturę?")) {
+                setTimeout(() => {
+                    alert("✅ Sukces! Faktura z 'Orange' została rozpoznana.\nKwota: 49.99 PLN\nTermin: 14 dni.");
+                    // Dodaj dynamicznie do listy
+                    const list = document.getElementById('transactions-list');
+                    const newItem = document.createElement('div');
+                    newItem.className = 'list-item';
+                    newItem.innerHTML = `
+                        <div style="display:flex; gap:12px; align-items:center;">
+                            <div class="item-icon" style="background:#ff7900;"><span style="font-size:20px;">O</span></div>
+                            <div><div style="font-weight:600;">Orange</div><div style="font-size:12px; color:#666;">Nowy!</div></div>
+                        </div>
+                        <div><span style="font-weight:700;">-49,99 zł</span></div>
+                    `;
+                    list.prepend(newItem);
+                }, 1000);
+            }
+        }
+
+        // PŁATNOŚĆ
+        function payBill(el, amount) {
+            const price = el.querySelector('.amount');
+            const status = el.querySelector('.status');
+            if(price.style.display !== 'none' && confirm("Zapłacić " + amount + " zł?")) {
+                price.style.display = 'none';
+                status.style.display = 'block';
+            }
         }
     </script>
 </body>

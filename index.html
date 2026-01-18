@@ -123,40 +123,84 @@
             </div>
             <div class="phone-frame">
                 <iframe src="app/index.html" class="app-iframe" title="App Demo"></iframe>
+                
+                /* --- NOWE STYLE DLA IKON SVG --- */
+        .bento-icon-svg { width: 48px; height: 48px; margin-bottom: 20px; display: block; }
+        
+        /* Animacja AI */
+        .ai-pulse { animation: pulse-ring 3s infinite; transform-origin: center; }
+        .ai-net { animation: dash 5s linear infinite; stroke-dasharray: 5; }
+        
+        /* Animacja Tarczy */
+        .shield-lock { animation: lock-bounce 2s infinite ease-in-out; transform-origin: center; }
+        
+        /* Animacja Płatności */
+        .pay-ripple { animation: ripple 1.5s infinite; transform-origin: 17.5px 17.5px; }
+        .pay-tap { animation: tap 1.5s infinite; transform-origin: center; }
+        
+        /* Animacja Wykresu */
+        .chart-line { stroke-dasharray: 30; stroke-dashoffset: 30; animation: draw-chart 3s ease-out forwards infinite; }
+        .chart-arrow { opacity: 0; animation: fade-in-arrow 3s ease-out forwards infinite; }
+
+        /* Klucze Animacji */
+        @keyframes pulse-ring { 0% { transform: scale(0.8); opacity: 0.5; } 100% { transform: scale(1.5); opacity: 0; } }
+        @keyframes dash { to { stroke-dashoffset: -20; } }
+        @keyframes lock-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+        @keyframes ripple { 0% { transform: scale(0.5); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
+        @keyframes tap { 0%, 100% { transform: scale(1); } 50% { transform: scale(0.9); } }
+        @keyframes draw-chart { 0% { stroke-dashoffset: 30; } 40%, 100% { stroke-dashoffset: 0; } }
+        @keyframes fade-in-arrow { 0%, 30% { opacity: 0; } 40%, 100% { opacity: 1; } }
             </div>
         </div>
     </section>
 
-    <section class="section-bento">
+   <section class="section-bento">
         <h2 style="text-align: center;">Technologia <span class="gold">Jutra</span></h2>
         <div class="bento-grid">
-            <div class="bento-card card-large">
+            <div class="bento-card card-large" style="background: linear-gradient(135deg, #1A1A1A, #0A0A0A);">
                 <div style="z-index: 2;">
-                    <span class="bento-icon">🤖</span>
+                    <svg class="bento-icon-svg svg-ai" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path class="ai-brain" d="M9.5 10C9.5 11.3807 10.6193 12.5 12 12.5C13.3807 12.5 14.5 11.3807 14.5 10C14.5 8.61929 13.3807 7.5 12 7.5C10.6193 7.5 9.5 8.61929 9.5 10Z" stroke="var(--gold)" stroke-width="1.5"/>
+                        <path class="ai-net" d="M12 15V19M7 19H17M7 19L5 21M17 19L19 21M12 5V2M7 5H17M7 5L5 3M17 5L19 3" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round"/>
+                        <circle class="ai-pulse" cx="12" cy="10" r="6" stroke="var(--gold)" stroke-opacity="0.3" stroke-width="1"/>
+                    </svg>
                     <h3>Autonomiczne AI</h3>
-                    <p style="color:#666; margin-top:10px;">
-                        Nasze algorytmy nie tylko analizują dane. One działają. ConciergePay sam loguje się do BOK (Play, Orange, E.ON) i pobiera faktury bez Twojego udziału.
+                    <p style="color:#999; margin-top:10px;">
+                        Nasze algorytmy działają w tle. ConciergePay sam loguje się do BOK (Play, Orange, E.ON), analizuje faktury i znajduje oszczędności bez Twojego udziału.
                     </p>
                 </div>
-                <div style="position:absolute; right:-50px; bottom:-50px; width:200px; height:200px; background:radial-gradient(circle, var(--gold-glow), transparent); opacity:0.5;"></div>
+                <div style="position:absolute; right:-50px; bottom:-50px; width:200px; height:200px; background:radial-gradient(circle, var(--gold-glow), transparent); opacity:0.4;"></div>
             </div>
 
             <div class="bento-card">
-                <span class="bento-icon">🛡️</span>
+                <svg class="bento-icon-svg svg-shield" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path class="shield-body" d="M12 22C12 22 20 18 20 12V5L12 2L4 5V12C4 18 12 22 12 22Z" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path class="shield-lock" d="M12 11V8M12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11ZM12 8C11.4477 8 11 8.44772 11 9V11H13V9C13 8.44772 12.5523 8 12 8Z" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
                 <h3>Bezpieczeństwo</h3>
-                <p style="color:#666; font-size:0.9rem;">Szyfrowanie AES-256 i tokenizacja płatności zgodna ze standardem PSD2.</p>
+                <p style="color:#999; font-size:0.9rem;">Szyfrowanie klasy bankowej AES-256 i tokenizacja płatności zgodna z PSD2.</p>
             </div>
 
             <div class="bento-card">
-                <span class="bento-icon">⚡</span>
+                <svg class="bento-icon-svg svg-pay" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect class="pay-card" x="2" y="5" width="20" height="14" rx="2" stroke="#FFFFFF" stroke-width="1.5"/>
+                    <line x1="2" y1="10" x2="22" y2="10" stroke="#FFFFFF" stroke-width="1.5"/>
+                    <path class="pay-tap" d="M16 16L19 19M19 16L16 19" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round"/>
+                    <circle class="pay-ripple" cx="17.5" cy="17.5" r="3" stroke="var(--gold)" stroke-opacity="0.5"/>
+                </svg>
                 <h3>One-Click Pay</h3>
-                <p style="color:#666; font-size:0.9rem;">Opłać 15 rachunków jednym kliknięciem w 3 sekundy.</p>
+                <p style="color:#999; font-size:0.9rem;">Opłać wszystkie rachunki jednym kliknięciem w mniej niż 3 sekundy.</p>
             </div>
 
-            <div class="bento-card card-large" style="background: linear-gradient(135deg, #111, #000);">
-                <span class="bento-icon">📈</span>
+            <div class="bento-card card-large">
+                <svg class="bento-icon-svg svg-chart" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path class="chart-line" d="M3 19L9 13L13 17L21 7" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path class="chart-arrow" d="M21 7L17 7M21 7L21 11" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M3 19H21" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M3 5V19" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
                 <h3>Analityka Predykcyjna</h3>
-                <p style="color:#666;">System przewiduje Twoje wydatki na przyszły miesiąc i ostrzega przed przekroczeniem budżetu.</p>
+                <p style="color:#999;">System przewiduje Twoje przyszłe wydatki i ostrzega przed przekroczeniem budżetu, zanim to nastąpi.</p>
             </div>
         </div>
     </section>

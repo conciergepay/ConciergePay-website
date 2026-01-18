@@ -3,152 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ConciergePay App</title>
+    <title>ConciergePay App Demo</title>
     <style>
-        /* --- SYSTEM --- */
-        :root { --bg: #000000; --surface: #141414; --text: #FFFFFF; --text-sub: #888888; --gold: #D4AF37; }
+        /* --- SYSTEM PREMIUM --- */
+        :root { --bg: #000000; --surface: #121212; --text: #FFFFFF; --text-sub: #999; --gold: #D4AF37; --success: #34C759; }
         body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: -apple-system, sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        .screen-container { flex: 1; position: relative; }
+        .screen { display: none; padding: 20px; height: 100%; overflow-y: auto; box-sizing: border-box; padding-bottom: 80px; }
+        .screen.active { display: block; animation: fade 0.3s; }
+        @keyframes fade { from { opacity:0; } to { opacity:1; } }
 
-        /* HEADER */
-        .header { padding: 20px; display: flex; justify-content: space-between; align-items: center; background: var(--bg); border-bottom: 1px solid #222; }
-        .avatar { width: 36px; height: 36px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #000; font-size: 14px; }
+        /* HEADER & UI */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .avatar { width:32px; height:32px; background:var(--gold); border-radius:50%; color:#000; font-weight:700; display:flex; align-items:center; justify-content:center; font-size:12px; }
+        h2 { margin: 0; font-size: 20px; }
+        h3 { font-size: 14px; color: var(--text-sub); margin: 20px 0 10px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* SCREENS (PANCERNY FIX) */
-        .screen-container { flex: 1; position: relative; overflow-y: auto; overflow-x: hidden; }
-        .screen { display: none; padding: 20px; padding-bottom: 100px; } /* Domyślnie ukryte */
-        .screen.active { display: block; animation: fadeIn 0.3s ease; } /* Tylko aktywne widoczne */
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* CARDS & LISTS */
+        .card { background: var(--surface); border-radius: 16px; padding: 20px; margin-bottom: 15px; border: 1px solid #222; }
+        .chart-placeholder { height: 150px; display: flex; align-items: flex-end; gap: 5px; padding-top: 20px; }
+        .bar { flex: 1; background: linear-gradient(to top, #333, #555); border-radius: 4px 4px 0 0; opacity: 0.6; transition: 0.3s; }
+        .bar:hover, .bar.active { background: var(--gold); opacity: 1; }
 
-        /* UI ELEMENTS */
-        .ai-card { background: linear-gradient(135deg, #1f1f1f 0%, #141414 100%); border: 1px solid #333; border-radius: 16px; padding: 20px; margin-bottom: 25px; position: relative; }
-        .ai-badge { background: rgba(212, 175, 55, 0.2); color: var(--gold); font-size: 10px; font-weight: 800; padding: 5px 10px; border-radius: 20px; margin-bottom: 10px; display: inline-block; }
+        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #222; }
+        .item-icon { width: 36px; height: 36px; background: #222; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
         
-        h3 { font-size: 15px; margin: 20px 0 15px 0; color: var(--text); }
-
-        /* ICONS ROW */
-        .icons { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
-        .icon-box { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 60px; cursor: pointer; }
-        .circle { width: 56px; height: 56px; background: #1c1c1e; border-radius: 20px; display: flex; align-items: center; justify-content: center; border: 1px solid #333; transition: 0.2s; }
-        .circle:active { transform: scale(0.95); border-color: var(--gold); }
-        .circle img { width: 28px; height: 28px; object-fit: contain; }
-
-        /* BILLS */
-        .bill { display: flex; justify-content: space-between; align-items: center; background: #1c1c1e; padding: 15px; border-radius: 16px; margin-bottom: 10px; cursor: pointer; border: 1px solid transparent; }
-        .bill:active { background: #222; }
-        .bill-left { display: flex; gap: 12px; align-items: center; }
-        .bill img { width: 40px; height: 40px; background: #fff; border-radius: 10px; padding: 4px; }
-        .status-paid { font-size: 11px; color: #34C759; display: none; font-weight: 600; }
-        
-        /* BOTTOM NAV */
-        .nav { height: 75px; background: rgba(20,20,20,0.95); border-top: 1px solid #222; display: flex; justify-content: space-around; align-items: flex-start; padding-top: 15px; position: fixed; bottom: 0; width: 100%; backdrop-filter: blur(10px); }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; opacity: 0.4; cursor: pointer; transition: 0.2s; }
+        /* NAV */
+        .nav { height: 70px; background: rgba(18,18,18,0.9); backdrop-filter: blur(10px); border-top: 1px solid #222; display: flex; justify-content: space-around; align-items: center; position: fixed; bottom: 0; width: 100%; }
+        .nav-item { opacity: 0.4; cursor: pointer; transition: 0.2s; text-align: center; }
         .nav-item.active { opacity: 1; color: var(--gold); }
-        .nav-icon { font-size: 22px; }
-        .nav-label { font-size: 10px; font-weight: 600; }
+        .nav-label { font-size: 10px; display: block; margin-top: 4px; }
     </style>
 </head>
 <body>
 
     <div class="screen-container">
         
-        <div id="screen-home" class="screen active">
-            <div class="ai-card" onclick="alert('🤖 AI: Analizuję taryfy G11 vs G12w...')">
-                <div class="ai-badge">✨ AI INSIGHT</div>
-                <div style="font-size: 14px; color: #ccc; margin-bottom: 5px;">Znalazłem tańszy prąd.</div>
-                <div style="font-size: 26px; font-weight: 700; color: var(--gold);">+450 PLN / rok</div>
-            </div>
-
-            <h3>Usługi</h3>
-            <div class="icons">
-                <div class="icon-box" onclick="alert('Skaner...')">
-                    <div class="circle" style="border: 1px dashed var(--gold); color: var(--gold); font-size: 24px;">+</div>
-                    <span style="font-size: 11px; color: #888;">Dodaj</span>
-                </div>
-                <div class="icon-box">
-                    <div class="circle"><img src="../assets/play.png" onerror="this.src='https://via.placeholder.com/30'"></div>
-                    <span style="font-size: 11px; color: #888;">Play</span>
-                </div>
-                <div class="icon-box">
-                    <div class="circle"><img src="../assets/eonlogo.png" onerror="this.src='https://via.placeholder.com/30'"></div>
-                    <span style="font-size: 11px; color: #888;">E.ON</span>
-                </div>
-            </div>
-
-            <h3 style="margin-top: 25px;">Do zapłaty</h3>
-            <div class="bill" onclick="payBill(this, '55,00 zł')">
-                <div class="bill-left">
-                    <img src="../assets/play.png" onerror="this.src='https://via.placeholder.com/40'">
-                    <div><div style="font-weight: 600;">Play</div><div style="font-size: 12px; color: #888;">Internet</div></div>
-                </div>
-                <div class="bill-right">
-                    <div class="price" style="font-weight: 700;">55,00 zł</div>
-                    <div class="status-paid">Opłacono ✅</div>
-                </div>
-            </div>
-            
-            <div class="bill" onclick="payBill(this, '79,84 zł')">
-                <div class="bill-left">
-                    <img src="../assets/eonlogo.png" onerror="this.src='https://via.placeholder.com/40'">
-                    <div><div style="font-weight: 600;">E.ON</div><div style="font-size: 12px; color: #888;">Energia</div></div>
-                </div>
-                <div class="bill-right">
-                    <div class="price" style="font-weight: 700;">79,84 zł</div>
-                    <div class="status-paid">Opłacono ✅</div>
-                </div>
+        <div id="screen-home" class="screen">
+            <div style="display:flex; justify-content:center; align-items:center; height:100%; color:#555;">
+                (Tu będzie ekran główny)
             </div>
         </div>
 
-        <div id="screen-stats" class="screen">
-            <h2 style="text-align: center; margin-top: 50px;">Wykresy</h2>
-            <p style="text-align: center; color: #666;">(Tu będą wykresy wydatków)</p>
+        <div id="screen-stats" class="screen active">
+            <div class="header">
+                <h2>Twoje Finanse</h2>
+                <div class="avatar">AK</div>
+            </div>
+            
+            <div class="card">
+                <div style="font-size:12px; color:var(--text-sub);">Wydatki w tym miesiącu</div>
+                <div style="font-size:28px; font-weight:700; margin: 5px 0;">1 450,00 PLN</div>
+                <div class="chart-placeholder">
+                    <div class="bar" style="height: 40%;"></div>
+                    <div class="bar" style="height: 60%;"></div>
+                    <div class="bar" style="height: 30%;"></div>
+                    <div class="bar" style="height: 80%;"></div>
+                    <div class="bar active" style="height: 100%; box-shadow: 0 0 15px var(--gold);"></div>
+                    <div class="bar" style="height: 50%;"></div>
+                    <div class="bar" style="height: 70%;"></div>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:10px; color:#666; margin-top:5px;">
+                    <span>Pon</span><span>Wt</span><span>Śr</span><span>Czw</span><span style="color:var(--gold);">Pt</span><span>Sob</span><span>Ndz</span>
+                </div>
+            </div>
+
+            <h3>Ostatnie Transakcje</h3>
+            <div class="list-item">
+                <div style="display:flex; gap:12px; align-items:center;">
+                    <div class="item-icon" style="background:#e9f5ff; color:#007aff;">🛒</div>
+                    <div><div>Żabka</div><div style="font-size:12px; color:#666;">Zakupy</div></div>
+                </div>
+                <div style="font-weight:600;">-45,20 zł</div>
+            </div>
+            <div class="list-item">
+                <div style="display:flex; gap:12px; align-items:center;">
+                    <div class="item-icon" style="background:#fff5e9; color:#ff9500;">⚡</div>
+                    <div><div>E.ON Polska</div><div style="font-size:12px; color:#666;">Rachunki</div></div>
+                </div>
+                <div style="font-weight:600;">-120,00 zł</div>
+            </div>
+             <div class="list-item">
+                <div style="display:flex; gap:12px; align-items:center;">
+                    <div class="item-icon" style="background:#e9fff0; color:#34c759;">🎬</div>
+                    <div><div>Netflix</div><div style="font-size:12px; color:#666;">Subskrypcje</div></div>
+                </div>
+                <div style="font-weight:600;">-60,00 zł</div>
+            </div>
         </div>
 
         <div id="screen-profile" class="screen">
-            <div style="text-align: center; margin-top: 40px;">
-                <div class="avatar" style="width: 80px; height: 80px; font-size: 24px; margin: 0 auto 20px;">AK</div>
+            <div style="text-align:center; margin:30px 0;">
+                <div class="avatar" style="width:80px; height:80px; font-size:24px; margin:0 auto 15px;">AK</div>
                 <h2>Alex Kowalski</h2>
-                <div style="color: var(--gold); border: 1px solid var(--gold); padding: 5px 15px; border-radius: 20px; display: inline-block;">Premium</div>
+                <div style="color:var(--gold); font-size:12px; margin-top:5px;">⭐ Konto Premium</div>
+            </div>
+            
+            <h3>Ustawienia</h3>
+            <div class="list-item" onclick="alert('Tu dodasz kartę')">
+                <div style="display:flex; gap:12px; align-items:center;">
+                    <div class="item-icon">💳</div>
+                    <div>Metody płatności</div>
+                </div>
+                <div style="color:#666;">Visa •••• 4242</div>
+            </div>
+            <div class="list-item" onclick="alert('Tu połączysz konta')">
+                <div style="display:flex; gap:12px; align-items:center;">
+                    <div class="item-icon">🔗</div>
+                    <div>Połączone konta</div>
+                </div>
+                <div style="color:#666;">3 aktywne</div>
+            </div>
+            <div class="list-item" style="border:none;">
+                <div style="display:flex; gap:12px; align-items:center;">
+                    <div class="item-icon">🔔</div>
+                    <div>Powiadomienia</div>
+                </div>
+                <div style="color:var(--success);">Włączone</div>
             </div>
         </div>
 
     </div>
 
-    <div style="position: absolute; top: 0; left: 0; width: 100%; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); border-bottom: 1px solid #222; z-index: 100;">
-        <div style="font-weight: 700;">Witaj, Alex 👋</div>
-        <div class="avatar">AK</div>
-    </div>
-
     <div class="nav">
-        <div class="nav-item active" onclick="switchTab('screen-home', this)">
-            <span class="nav-icon">🏠</span><span class="nav-label">Start</span>
+        <div class="nav-item" onclick="switchTab('screen-home', this)">
+            <span style="font-size:20px;">🏠</span><span class="nav-label">Start</span>
         </div>
-        <div class="nav-item" onclick="switchTab('screen-stats', this)">
-            <span class="nav-icon">📊</span><span class="nav-label">Analizy</span>
+        <div class="nav-item active" onclick="switchTab('screen-stats', this)">
+            <span style="font-size:20px;">📊</span><span class="nav-label">Analizy</span>
         </div>
         <div class="nav-item" onclick="switchTab('screen-profile', this)">
-            <span class="nav-icon">👤</span><span class="nav-label">Profil</span>
+            <span style="font-size:20px;">👤</span><span class="nav-label">Profil</span>
         </div>
     </div>
 
     <script>
         function switchTab(screenId, navItem) {
-            // Ukryj wszystko
             document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            
-            // Pokaż wybrane
             document.getElementById(screenId).classList.add('active');
             navItem.classList.add('active');
-        }
-
-        function payBill(el, amount) {
-            const price = el.querySelector('.price');
-            const status = el.querySelector('.status-paid');
-            if(price.style.display !== 'none' && confirm("Zapłacić " + amount + "?")) {
-                price.style.display = 'none';
-                status.style.display = 'block';
-                el.style.borderColor = '#333';
-            }
         }
     </script>
 </body>

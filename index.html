@@ -16,7 +16,7 @@
         body { background-color: var(--bg); color: var(--text); overflow-x: hidden; }
 
         /* VIDEO BACKGROUND */
-        .video-wrapper { position: absolute; top: 0; left: 0; width: 100%; height: 110vh; z-index: -1; overflow: hidden; opacity: 0.35; mix-blend-mode: lighten; }
+        .video-wrapper { position: absolute; top: 0; left: 0; width: 100%; height: 120vh; z-index: -1; overflow: hidden; opacity: 0.3; mix-blend-mode: lighten; }
         .video-bg { width: 100%; height: 100%; object-fit: cover; filter: saturate(0) contrast(1.2); }
         .hero-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 0%, var(--bg) 90%); }
 
@@ -48,9 +48,9 @@
             transform: rotate(-3deg); transition: 0.5s;
         }
         .phone-frame:hover { transform: rotate(0deg) scale(1.02); }
-        .app-iframe { width: 100%; height: 100%; border: none; border-radius: 46px; }
+        .app-iframe { width: 100%; height: 100%; border: none; border-radius: 46px; background: #000; }
 
-        /* --- BENTO GRID (NOWOŚĆ) --- */
+        /* BENTO GRID & ICONS */
         .section-bento { padding: 100px 5%; max-width: 1400px; margin: 0 auto; }
         .bento-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 60px; }
         .bento-card { 
@@ -59,21 +59,33 @@
         }
         .bento-card:hover { border-color: var(--gold); transform: translateY(-5px); }
         .card-large { grid-column: span 2; }
-        .bento-icon { font-size: 40px; margin-bottom: 20px; display: block; }
         
-        /* MAP SECTION (TWOJA MAPA) */
+        /* --- STYLE DLA NOWYCH IKON SVG --- */
+        .bento-icon-svg { width: 64px; height: 64px; margin-bottom: 24px; display: block; }
+        
+        /* Animacje SVG */
+        .ai-pulse { animation: pulse-ring 3s infinite; transform-origin: center; }
+        .ai-net { animation: dash 5s linear infinite; stroke-dasharray: 5; }
+        .shield-lock { animation: lock-bounce 2s infinite ease-in-out; transform-origin: center; }
+        .pay-ripple { animation: ripple 1.5s infinite; transform-origin: 17.5px 17.5px; }
+        .pay-tap { animation: tap 1.5s infinite; transform-origin: center; }
+        .chart-line { stroke-dasharray: 30; stroke-dashoffset: 30; animation: draw-chart 3s ease-out forwards infinite; }
+        .chart-arrow { opacity: 0; animation: fade-in-arrow 3s ease-out forwards infinite; }
+
+        @keyframes pulse-ring { 0% { transform: scale(0.8); opacity: 0.5; } 100% { transform: scale(1.5); opacity: 0; } }
+        @keyframes dash { to { stroke-dashoffset: -20; } }
+        @keyframes lock-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+        @keyframes ripple { 0% { transform: scale(0.5); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
+        @keyframes tap { 0%, 100% { transform: scale(1); } 50% { transform: scale(0.9); } }
+        @keyframes draw-chart { 0% { stroke-dashoffset: 30; } 40%, 100% { stroke-dashoffset: 0; } }
+        @keyframes fade-in-arrow { 0%, 30% { opacity: 0; } 40%, 100% { opacity: 1; } }
+
+        /* MAP SECTION */
         .section-map { position: relative; padding: 150px 5%; text-align: center; background: #050505; overflow: hidden; }
-        .map-bg { 
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            width: 80%; opacity: 0.2; pointer-events: none;
-        }
-        /* Dots Animation */
+        .map-bg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; opacity: 0.2; pointer-events: none; }
         .dot { position: absolute; width: 8px; height: 8px; background: var(--gold); border-radius: 50%; box-shadow: 0 0 10px var(--gold); animation: pulse 2s infinite; }
-        .d1 { top: 40%; left: 30%; animation-delay: 0s; }
-        .d2 { top: 35%; left: 45%; animation-delay: 0.5s; }
-        .d3 { top: 50%; left: 60%; animation-delay: 1s; }
-        .d4 { top: 45%; left: 75%; animation-delay: 1.5s; }
-        
+        .d1 { top: 40%; left: 30%; animation-delay: 0s; } .d2 { top: 35%; left: 45%; animation-delay: 0.5s; }
+        .d3 { top: 50%; left: 60%; animation-delay: 1s; } .d4 { top: 45%; left: 75%; animation-delay: 1.5s; }
         @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(3); opacity: 0; } }
 
         /* FOOTER */
@@ -101,8 +113,8 @@
     </div>
 
     <nav>
-        <a href="#" class="logo"><img src="assets/conciergepaylogo.png" height="30"> ConciergePay</a>
-        <a href="#map" class="btn" style="background: rgba(255,255,255,0.1); color: #fff;">Inwestorzy</a>
+        <a href="#" class="logo"><img src="assets/conciergepaylogo.png" height="30" style="margin-right:10px;"> ConciergePay</a>
+        <a href="#map" class="btn" style="background: rgba(255,255,255,0.1); color: #fff;">Dla Inwestorów</a>
     </nav>
 
     <section class="hero">
@@ -116,48 +128,18 @@
                 </p>
                 <div style="display: flex; gap: 15px; flex-wrap: wrap;">
                     <a href="#map" class="btn btn-primary">Dołącz do Bety</a>
-                    <div style="display:flex; align-items:center; gap:10px; font-size:13px; color:#666;">
-                        <span style="color:#34C759">●</span> Systemy online
-                    </div>
                 </div>
             </div>
             <div class="phone-frame">
                 <iframe src="app/index.html" class="app-iframe" title="App Demo"></iframe>
-                
-                /* --- NOWE STYLE DLA IKON SVG --- */
-        .bento-icon-svg { width: 48px; height: 48px; margin-bottom: 20px; display: block; }
-        
-        /* Animacja AI */
-        .ai-pulse { animation: pulse-ring 3s infinite; transform-origin: center; }
-        .ai-net { animation: dash 5s linear infinite; stroke-dasharray: 5; }
-        
-        /* Animacja Tarczy */
-        .shield-lock { animation: lock-bounce 2s infinite ease-in-out; transform-origin: center; }
-        
-        /* Animacja Płatności */
-        .pay-ripple { animation: ripple 1.5s infinite; transform-origin: 17.5px 17.5px; }
-        .pay-tap { animation: tap 1.5s infinite; transform-origin: center; }
-        
-        /* Animacja Wykresu */
-        .chart-line { stroke-dasharray: 30; stroke-dashoffset: 30; animation: draw-chart 3s ease-out forwards infinite; }
-        .chart-arrow { opacity: 0; animation: fade-in-arrow 3s ease-out forwards infinite; }
-
-        /* Klucze Animacji */
-        @keyframes pulse-ring { 0% { transform: scale(0.8); opacity: 0.5; } 100% { transform: scale(1.5); opacity: 0; } }
-        @keyframes dash { to { stroke-dashoffset: -20; } }
-        @keyframes lock-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
-        @keyframes ripple { 0% { transform: scale(0.5); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
-        @keyframes tap { 0%, 100% { transform: scale(1); } 50% { transform: scale(0.9); } }
-        @keyframes draw-chart { 0% { stroke-dashoffset: 30; } 40%, 100% { stroke-dashoffset: 0; } }
-        @keyframes fade-in-arrow { 0%, 30% { opacity: 0; } 40%, 100% { opacity: 1; } }
             </div>
         </div>
     </section>
 
-   <section class="section-bento">
+    <section class="section-bento">
         <h2 style="text-align: center;">Technologia <span class="gold">Jutra</span></h2>
         <div class="bento-grid">
-            <div class="bento-card card-large" style="background: linear-gradient(135deg, #1A1A1A, #0A0A0A);">
+            <div class="bento-card card-large" style="background: linear-gradient(135deg, #151515, #050505);">
                 <div style="z-index: 2;">
                     <svg class="bento-icon-svg svg-ai" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path class="ai-brain" d="M9.5 10C9.5 11.3807 10.6193 12.5 12 12.5C13.3807 12.5 14.5 11.3807 14.5 10C14.5 8.61929 13.3807 7.5 12 7.5C10.6193 7.5 9.5 8.61929 9.5 10Z" stroke="var(--gold)" stroke-width="1.5"/>
@@ -165,7 +147,7 @@
                         <circle class="ai-pulse" cx="12" cy="10" r="6" stroke="var(--gold)" stroke-opacity="0.3" stroke-width="1"/>
                     </svg>
                     <h3>Autonomiczne AI</h3>
-                    <p style="color:#999; margin-top:10px;">
+                    <p style="color:#888; margin-top:10px;">
                         Nasze algorytmy działają w tle. ConciergePay sam loguje się do BOK (Play, Orange, E.ON), analizuje faktury i znajduje oszczędności bez Twojego udziału.
                     </p>
                 </div>
@@ -178,7 +160,7 @@
                     <path class="shield-lock" d="M12 11V8M12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11ZM12 8C11.4477 8 11 8.44772 11 9V11H13V9C13 8.44772 12.5523 8 12 8Z" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round"/>
                 </svg>
                 <h3>Bezpieczeństwo</h3>
-                <p style="color:#999; font-size:0.9rem;">Szyfrowanie klasy bankowej AES-256 i tokenizacja płatności zgodna z PSD2.</p>
+                <p style="color:#888; font-size:0.9rem;">Szyfrowanie AES-256 i tokenizacja płatności.</p>
             </div>
 
             <div class="bento-card">
@@ -189,7 +171,7 @@
                     <circle class="pay-ripple" cx="17.5" cy="17.5" r="3" stroke="var(--gold)" stroke-opacity="0.5"/>
                 </svg>
                 <h3>One-Click Pay</h3>
-                <p style="color:#999; font-size:0.9rem;">Opłać wszystkie rachunki jednym kliknięciem w mniej niż 3 sekundy.</p>
+                <p style="color:#888; font-size:0.9rem;">Opłać 15 rachunków w 3 sekundy.</p>
             </div>
 
             <div class="bento-card card-large">
@@ -200,15 +182,16 @@
                     <path d="M3 5V19" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
                 </svg>
                 <h3>Analityka Predykcyjna</h3>
-                <p style="color:#999;">System przewiduje Twoje przyszłe wydatki i ostrzega przed przekroczeniem budżetu, zanim to nastąpi.</p>
+                <p style="color:#888;">System przewiduje przyszłe wydatki i ostrzega przed przekroczeniem budżetu.</p>
             </div>
         </div>
     </section>
 
     <section id="map" class="section-map">
         <img src="https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg" class="map-bg" style="filter: invert(1) opacity(0.2);">
+        <div class="dot d1"></div> <div class="dot d2"></div> <div class="dot d3"></div> <div class="dot d4"></div>
         
-        <div class="dot d1"></div> <div class="dot d2"></div> <div class="dot d3"></div> <div class="dot d4"></div> <div style="position: relative; z-index: 2;">
+        <div style="position: relative; z-index: 2;">
             <h2 style="font-size: 3.5rem;">Globalna Infrastruktura</h2>
             <p style="margin: 0 auto 40px; max-width: 600px;">
                 Obsługujemy 4,500 dostawców mediów w Europie i USA. <br>

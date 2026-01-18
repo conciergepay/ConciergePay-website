@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConciergePay | Twoje Finanse na Autopilocie</title>
+    <style>
+        /* --- 1. DESIGN SYSTEM --- */
+        :root {
+            --bg: #050505;
+            --surface: #121212;
+            --text-main: #FFFFFF;
+            --text-sub: #A1A1A6;
+            --gold: #C19A5B;
+            --gold-glow: rgba(193, 154, 91, 0.4);
+            --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font); scroll-behavior: smooth; }
+        body { background-color: var(--bg); color: var(--text-main); overflow-x: hidden; }
+
+        /* TYPOGRAFIA */
+        h1 { font-size: 3.5rem; line-height: 1.1; font-weight: 800; letter-spacing: -1px; margin-bottom: 20px; }
+        h2 { font-size: 2.5rem; font-weight: 700; margin-bottom: 20px; }
+        h3 { font-size: 1.5rem; font-weight: 600; margin-bottom: 10px; }
+        p { font-size: 1.1rem; color: var(--text-sub); line-height: 1.6; max-width: 600px; }
+        
+        .gold-text { color: var(--gold); }
+        .gradient-text {
+            background: linear-gradient(135deg, #fff 0%, #A1A1A6 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-block; padding: 16px 32px; border-radius: 50px;
+            font-weight: 600; text-decoration: none; transition: 0.3s; cursor: pointer; border: none; font-size: 1rem;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #C19A5B, #8a6e3d); color: white;
+            box-shadow: 0 10px 30px var(--gold-glow);
+        }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 40px var(--gold-glow); }
+        .btn-secondary { background: rgba(255,255,255,0.1); color: white; backdrop-filter: blur(10px); }
+        .btn-secondary:hover { background: rgba(255,255,255,0.2); }
+
+        /* LAYOUT */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        section { padding: 100px 0; }
+
+        /* NAV */
+        nav {
+            padding: 20px 0; position: fixed; top: 0; width: 100%; z-index: 1000;
+            background: rgba(5, 5, 5, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .nav-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 700; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; color: white; text-decoration: none; }
+        .logo img { height: 30px; }
+
+        /* HERO SECTION */
+        .hero {
+            min-height: 100vh; display: flex; align-items: center; position: relative;
+            background: radial-gradient(circle at 70% 50%, rgba(193, 154, 91, 0.1) 0%, rgba(0,0,0,0) 60%);
+            padding-top: 100px;
+        }
+        .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+        
+        /* REAL INTERACTIVE MOCKUP */
+        .iphone-frame {
+            width: 375px; height: 812px; background: #000; border-radius: 50px;
+            border: 10px solid #222; position: relative; overflow: hidden;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.6); margin: 0 auto;
+            transform: scale(0.9); transform-origin: top center;
+        }
+        /* Notch */
+        .iphone-frame::before {
+            content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 150px; height: 30px; background: #222; border-radius: 0 0 20px 20px; z-index: 10;
+        }
+        /* IFRAME - MAGIC HAPPENS HERE */
+        .app-embed {
+            width: 100%; height: 100%; border: none; background: #fff;
+        }
+
+        /* FEATURES */
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 50px; }
+        .feature-card {
+            background: var(--surface); padding: 40px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;
+        }
+        .feature-card:hover { transform: translateY(-10px); border-color: var(--gold); }
+        .icon { font-size: 2.5rem; margin-bottom: 20px; display: block; }
+
+        /* FORM */
+        .cta-section { text-align: center; background: linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%); }
+        .waitlist-form {
+            margin-top: 40px; display: flex; gap: 10px; justify-content: center; max-width: 500px; margin-left: auto; margin-right: auto;
+        }
+        .input-email {
+            flex: 1; padding: 16px 24px; border-radius: 50px; border: 1px solid #333;
+            background: #000; color: white; outline: none; font-size: 1rem;
+        }
+        .input-email:focus { border-color: var(--gold); }
+
+        /* FOOTER */
+        footer { padding: 50px 0; border-top: 1px solid #222; text-align: center; color: var(--text-sub); font-size: 0.9rem; }
+
+        @media (max-width: 900px) {
+            .hero-grid { grid-template-columns: 1fr; text-align: center; }
+            .iphone-frame { margin-top: 50px; transform: scale(0.8); }
+            h1 { font-size: 2.5rem; }
+            .waitlist-form { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="container nav-content">
+            <a href="#" class="logo"><img src="assets/conciergepaylogo.png" alt="Logo"> ConciergePay</a>
+            <div>
+                <a href="#features" class="btn btn-secondary" style="background:transparent; border:none;">Funkcje</a>
+                <a href="#waitlist" class="btn btn-primary" style="padding: 10px 20px;">Dostęp</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container hero-grid">
+            <div class="hero-content">
+                <div style="color:var(--gold); font-weight:700; margin-bottom:20px; letter-spacing: 2px;">INTERAKTYWNE DEMO</div>
+                <h1>Przetestuj <span class="gradient-text">przyszłość płatności</span> teraz.</h1>
+                <p style="margin-bottom: 40px;">
+                    To nie jest makieta. Po prawej stronie (lub poniżej) znajduje się działający prototyp naszej aplikacji. Klikaj, skanuj i zobacz, jak działa Concierge AI.
+                </p>
+                <div style="display:flex; gap:15px; flex-wrap:wrap;">
+                    <a href="#waitlist" class="btn btn-primary">Chcę to mieć</a>
+                    <p style="font-size:0.8rem; margin-top:15px; color:#666;">Kliknij w telefon, aby rozpocząć demo.</p>
+                </div>
+            </div>
+            
+            <div class="hero-visual">
+                <div class="iphone-frame">
+                    <iframe src="app/index.html" class="app-embed" title="App Demo"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" style="background:var(--surface);">
+        <div class="container">
+            <h2 style="text-align:center;">Więcej niż bankowość.</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="icon">🤖</span>
+                    <h3>Sztuczna Inteligencja</h3>
+                    <p>Concierge AI analizuje Twoje umowy i znajduje tańsze alternatywy. Średnia oszczędność: 450 zł rocznie.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="icon">⚡</span>
+                    <h3>Automatyzacja</h3>
+                    <p>Zapomnij o logowaniu do Play24 czy eBOK. System sam pobiera i opłaca faktury.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="icon">💎</span>
+                    <h3>Model Premium</h3>
+                    <p>Za cenę jednej kawy miesięcznie zyskujesz osobistego asystenta finansowego 24/7.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="waitlist" class="cta-section">
+        <div class="container">
+            <h2 style="font-size:3rem;">Zapisz się na listę</h2>
+            <p style="margin:0 auto 30px;">Zostaw maila, aby otrzymać powiadomienie o starcie i <strong>3 miesiące Premium gratis</strong>.</p>
+            
+            <form action="https://formsubmit.co/conciergepay@gmail.com" method="POST" class="waitlist-form">
+                <input type="hidden" name="_next" value="https://TwojaStrona.com/dziekuje.html"> <input type="hidden" name="_subject" value="Nowy zapis na ConciergePay!">
+                <input type="hidden" name="_captcha" value="false">
+                
+                <input type="email" name="email" placeholder="Twój adres email" class="input-email" required>
+                <button type="submit" class="btn btn-primary">Dołącz</button>
+            </form>
+            <p style="font-size:0.8rem; margin-top:20px; color:#444;">Nie wysyłamy spamu.</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <img src="assets/conciergepaylogo.png" style="height:30px; opacity:0.5; margin-bottom:20px;">
+            <p>&copy; 2025 ConciergePay. MVP Demo.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

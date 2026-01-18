@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConciergePay | Twoje Finanse na Autopilocie</title>
+    <style>
+        /* --- 1. DESIGN SYSTEM (ZGODNY Z APP) --- */
+        :root {
+            --bg: #050505;
+            --surface: #121212;
+            --surface-light: #1E1E1E;
+            --text-main: #FFFFFF;
+            --text-sub: #A1A1A6;
+            --gold: #C19A5B;
+            --gold-glow: rgba(193, 154, 91, 0.4);
+            --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font); }
+        body { background-color: var(--bg); color: var(--text-main); overflow-x: hidden; }
+
+        /* TYPOGRAFIA */
+        h1 { font-size: 4rem; line-height: 1.1; font-weight: 800; letter-spacing: -1px; margin-bottom: 20px; }
+        h2 { font-size: 2.5rem; font-weight: 700; margin-bottom: 20px; }
+        h3 { font-size: 1.5rem; font-weight: 600; margin-bottom: 10px; }
+        p { font-size: 1.1rem; color: var(--text-sub); line-height: 1.6; max-width: 600px; }
+        
+        .gold-text { color: var(--gold); }
+        .gradient-text {
+            background: linear-gradient(135deg, #fff 0%, #A1A1A6 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-block; padding: 16px 32px; border-radius: 50px;
+            font-weight: 600; text-decoration: none; transition: 0.3s; cursor: pointer; border: none; font-size: 1rem;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #C19A5B, #8a6e3d); color: white;
+            box-shadow: 0 10px 30px var(--gold-glow);
+        }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 40px var(--gold-glow); }
+        
+        .btn-secondary { background: rgba(255,255,255,0.1); color: white; backdrop-filter: blur(10px); }
+        .btn-secondary:hover { background: rgba(255,255,255,0.2); }
+
+        /* --- LAYOUT --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        section { padding: 100px 0; }
+
+        /* NAV */
+        nav {
+            padding: 20px 0; position: fixed; top: 0; width: 100%; z-index: 1000;
+            background: rgba(5, 5, 5, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .nav-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 700; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; color: white; text-decoration: none; }
+        .logo img { height: 30px; }
+
+        /* HERO SECTION */
+        .hero {
+            min-height: 100vh; display: flex; align-items: center; position: relative;
+            background: radial-gradient(circle at 50% 50%, rgba(193, 154, 91, 0.15) 0%, rgba(0,0,0,0) 50%);
+        }
+        .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+        
+        .hero-content { z-index: 2; }
+        .hero-visual { position: relative; display: flex; justify-content: center; }
+        
+        /* IPHONE MOCKUP (CSS ONLY) */
+        .iphone-mockup {
+            width: 300px; height: 600px; background: #000; border-radius: 45px;
+            border: 8px solid #333; position: relative; overflow: hidden;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.5);
+            animation: float 6s ease-in-out infinite;
+        }
+        .iphone-screen {
+            width: 100%; height: 100%; background: var(--surface);
+            display: flex; flex-direction: column; padding: 20px;
+        }
+        /* Fake UI Elements inside Mockup */
+        .mock-header { display: flex; justify-content: space-between; margin-top: 30px; margin-bottom: 20px; }
+        .mock-card { background: #1c1c1e; border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid #333; }
+        .mock-bar { height: 10px; background: #333; border-radius: 5px; width: 60%; margin-bottom: 10px; }
+        .mock-circle { width: 50px; height: 50px; background: #333; border-radius: 50%; }
+
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
+        /* FEATURES GRID */
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 50px; }
+        .feature-card {
+            background: var(--surface); padding: 40px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.3s;
+        }
+        .feature-card:hover { transform: translateY(-10px); border-color: var(--gold); }
+        .icon { font-size: 2.5rem; margin-bottom: 20px; display: block; }
+
+        /* HOW IT WORKS */
+        .steps { display: flex; justify-content: space-between; margin-top: 50px; text-align: center; }
+        .step-item { position: relative; padding: 20px; flex: 1; }
+        .step-num { 
+            font-size: 4rem; font-weight: 800; color: rgba(255,255,255,0.05); 
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%); z-index: 0;
+        }
+        .step-content { position: relative; z-index: 1; }
+
+        /* WAITLIST / CTA */
+        .cta-section { text-align: center; background: linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%); }
+        .waitlist-form {
+            margin-top: 40px; display: flex; gap: 10px; justify-content: center; max-width: 500px; margin-left: auto; margin-right: auto;
+        }
+        .input-email {
+            flex: 1; padding: 16px 24px; border-radius: 50px; border: 1px solid #333;
+            background: #000; color: white; outline: none; font-size: 1rem;
+        }
+        .input-email:focus { border-color: var(--gold); }
+
+        /* FOOTER */
+        footer { padding: 50px 0; border-top: 1px solid #222; text-align: center; color: var(--text-sub); font-size: 0.9rem; }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .hero-grid { grid-template-columns: 1fr; text-align: center; }
+            .hero-visual { display: none; } /* Hide phone on mobile for simplicity */
+            .steps { flex-direction: column; gap: 40px; }
+            .waitlist-form { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="container nav-content">
+            <a href="#" class="logo">
+                <img src="assets/conciergepaylogo.png" alt="Logo"> ConciergePay
+            </a>
+            <div>
+                <a href="#features" class="btn btn-secondary" style="background:transparent; border:none;">Funkcje</a>
+                <a href="#waitlist" class="btn btn-primary" style="padding: 10px 20px;">Dołącz</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container hero-grid">
+            <div class="hero-content">
+                <div style="color:var(--gold); font-weight:700; margin-bottom:20px; letter-spacing: 2px;">NOWA ERA FINANSÓW</div>
+                <h1>Twoje rachunki <br><span class="gradient-text">na autopilocie.</span></h1>
+                <p style="margin-bottom: 40px;">
+                    Przestań tracić czas na logowanie do 10 różnych portali. ConciergePay pobiera faktury, opłaca je jednym kliknięciem i znajduje oszczędności dzięki AI.
+                </p>
+                <div style="display:flex; gap:15px; flex-wrap:wrap;">
+                    <a href="#waitlist" class="btn btn-primary">Dołącz do wczesnego dostępu</a>
+                    <a href="#how" class="btn btn-secondary">Zobacz jak to działa</a>
+                </div>
+                <div style="margin-top:30px; font-size:0.9rem; color:var(--text-sub); display:flex; align-items:center; gap:10px;">
+                    <span style="color:var(--success)">●</span> Bezpieczeństwo klasy bankowej
+                </div>
+            </div>
+            
+            <div class="hero-visual">
+                <div class="iphone-mockup">
+                    <div class="iphone-screen">
+                        <div class="mock-header">
+                            <div style="font-weight:800; font-size:20px;">Cześć, Daniel 👋</div>
+                            <div class="mock-circle" style="width:30px; height:30px;"></div>
+                        </div>
+                        
+                        <div class="mock-card" style="background: #1c1c1e; border: 1px solid var(--gold);">
+                            <div style="color:var(--gold); font-size:10px; font-weight:700; margin-bottom:5px;">✨ AI SUGGESTION</div>
+                            <div style="font-size:14px; margin-bottom:5px;">Zmień taryfę prądu</div>
+                            <div style="font-size:20px; font-weight:700;">+450 zł / rok</div>
+                        </div>
+
+                        <div style="margin-top:20px; font-weight:700; margin-bottom:10px;">Rachunki</div>
+                        <div class="mock-card" style="display:flex; justify-content:space-between; align-items:center;">
+                            <div style="display:flex; gap:10px; align-items:center;">
+                                <div class="mock-circle" style="width:30px; height:30px; background:#fff;"></div>
+                                <div><div style="width:60px; height:8px; background:#555; border-radius:4px;"></div></div>
+                            </div>
+                            <div style="width:40px; height:15px; background:#C19A5B; border-radius:4px;"></div>
+                        </div>
+                        <div class="mock-card" style="display:flex; justify-content:space-between; align-items:center;">
+                            <div style="display:flex; gap:10px; align-items:center;">
+                                <div class="mock-circle" style="width:30px; height:30px; background:#fff;"></div>
+                                <div><div style="width:50px; height:8px; background:#555; border-radius:4px;"></div></div>
+                            </div>
+                            <div style="width:40px; height:15px; background:#333; border-radius:4px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" style="background:var(--surface);">
+        <div class="container">
+            <h2 style="text-align:center;">Więcej niż płatności. <br><span class="gold-text">Osobisty Asystent.</span></h2>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="icon">🤖</span>
+                    <h3>Sztuczna Inteligencja</h3>
+                    <p>Nasze AI analizuje Twoje umowy i sugeruje tańsze alternatywy. Nie przepłacaj za prąd czy internet.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="icon">🔌</span>
+                    <h3>Integracja BOK</h3>
+                    <p>Połącz konta Play, E.ON, Orange i inne. Faktury pobierają się same. Koniec z szukaniem PDF-ów.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="icon">🔒</span>
+                    <h3>Bezpieczeństwo</h3>
+                    <p>Szyfrowanie AES-256 i standardy bankowe. Twoje dane są bezpieczne i nigdy nie są sprzedawane.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="how">
+        <div class="container">
+            <h2 style="text-align:center;">Jak to działa?</h2>
+            <div class="steps">
+                <div class="step-item">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <h3>Podłącz konta</h3>
+                        <p>Zaloguj się do swoich dostawców mediów przez naszą bezpieczną bramkę.</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <h3>Analiza AI</h3>
+                        <p>System pobiera faktury i sprawdza, gdzie możesz zaoszczędzić.</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <h3>Jedno kliknięcie</h3>
+                        <p>Akceptujesz płatności zbiorczo. Wszystko opłacone w 10 sekund.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="waitlist" class="cta-section">
+        <div class="container">
+            <h2 style="font-size:3rem;">Zapisz się na listę oczekujących</h2>
+            <p style="margin:0 auto;">Bądź jednym z pierwszych użytkowników i otrzymaj <strong>3 miesiące Premium gratis</strong>.</p>
+            
+            <form class="waitlist-form" onsubmit="event.preventDefault(); alert('Dziękujemy! Jesteś na liście.');">
+                <input type="email" placeholder="Twój adres email" class="input-email" required>
+                <button type="submit" class="btn btn-primary">Dołącz teraz</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <img src="assets/conciergepaylogo.png" style="height:30px; opacity:0.5; margin-bottom:20px;">
+            <p style="font-size:0.8rem;">&copy; 2025 ConciergePay. Wszystkie prawa zastrzeżone.</p>
+            <div style="margin-top:20px;">
+                <a href="#" style="color:#666; text-decoration:none; margin:0 10px;">Prywatność</a>
+                <a href="#" style="color:#666; text-decoration:none; margin:0 10px;">Regulamin</a>
+                <a href="#" style="color:#666; text-decoration:none; margin:0 10px;">Kontakt</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

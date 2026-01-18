@@ -272,6 +272,65 @@
             </div>
         </div>
     </footer>
+<script>
+        // SYMULACJA BACKENDU (LOCAL STORAGE)
+        
+        // 1. Nawigacja
+        function goTo(id) {
+            document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
 
+        // 2. Logowanie z "Loadingiem"
+        function login() {
+            const btn = document.querySelector('.btn-gold');
+            const originalText = btn.innerText;
+            btn.innerText = "Weryfikacja...";
+            btn.style.opacity = "0.7";
+            
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.opacity = "1";
+                goTo('screen-dashboard');
+            }, 1000);
+        }
+
+        // 3. Symulacja Płatności
+        function payBill(element, amount) {
+            if(confirm("Czy chcesz opłacić rachunek " + amount + " jednym kliknięciem?")) {
+                // Zmiana wyglądu na "Opłacono"
+                const statusDiv = element.querySelector('.status-pill'); // Musimy dodać tę klasę w HTML
+                const priceDiv = element.querySelector('.bill-price');
+                
+                if(statusDiv) {
+                    statusDiv.innerText = "Przetwarzanie...";
+                    statusDiv.style.background = "#eee";
+                    statusDiv.style.color = "#333";
+                    
+                    setTimeout(() => {
+                        statusDiv.innerText = "Opłacono ✅";
+                        statusDiv.style.background = "#E8F5E9";
+                        statusDiv.style.color = "#34C759";
+                        priceDiv.style.textDecoration = "line-through";
+                        priceDiv.style.opacity = "0.5";
+                        alert("Płatność zrealizowana przez ConciergePay!");
+                    }, 1500);
+                }
+            }
+        }
+
+        // 4. Modal Premium
+        function openPremium() { document.getElementById('screen-premium').classList.add('show'); }
+        function closePremium() { document.getElementById('screen-premium').classList.remove('show'); }
+        
+        function activatePremium() {
+            const btn = document.querySelector('#screen-premium .btn-gold');
+            btn.innerText = "Aktywowano!";
+            setTimeout(() => {
+                closePremium();
+                alert("Witaj w świecie Premium! AI rozpoczęło analizę umów.");
+            }, 1000);
+        }
+    </script>
 </body>
 </html>

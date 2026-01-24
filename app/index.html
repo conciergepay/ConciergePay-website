@@ -5,274 +5,216 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ConciergePay Auto-Demo</title>
     <style>
-        /* --- SYSTEM PREMIUM --- */
-        :root { --bg: #000000; --surface: #121212; --text: #FFFFFF; --text-sub: #999; --gold: #D4AF37; --success: #34C759; }
-        body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: -apple-system, sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; user-select: none; }
+        /* --- SYSTEM --- */
+        :root { --bg: #000000; --surface: #121212; --text: #FFFFFF; --gold: #D4AF37; --success: #34C759; }
+        body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: -apple-system, sans-serif; height: 100vh; overflow: hidden; user-select: none; position: relative; }
         
-        .screen-container { flex: 1; position: relative; overflow: hidden; }
-        .screen { position: absolute; top:0; left:0; width:100%; height:100%; display: none; padding: 20px; box-sizing: border-box; flex-direction: column; transition: opacity 0.5s; }
-        .screen.active { display: flex; animation: fade 0.5s; }
-        @keyframes fade { from { opacity:0; transform: scale(0.98); } to { opacity:1; transform: scale(1); } }
+        /* GHOST CURSOR (WIDZIALNY KURSOR) */
+        .cursor {
+            position: fixed; top: 50%; left: 50%; width: 20px; height: 20px;
+            background: rgba(255, 255, 255, 0.8); border: 2px solid #fff; border-radius: 50%;
+            pointer-events: none; z-index: 9999; transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: 0 0 15px rgba(255,255,255,0.5); display: block;
+        }
+        .cursor.click { transform: scale(0.8); background: var(--gold); }
 
-        /* UI ELEMENTS */
-        .btn { width: 100%; padding: 16px; background: var(--gold); border: none; border-radius: 12px; font-weight: 700; font-size: 16px; margin-top: 20px; color: #000; transition: 0.3s; }
+        /* SCREENS */
+        .screen { position: absolute; top:0; left:0; width:100%; height:100%; display: none; flex-direction: column; padding: 20px; box-sizing: border-box; background: var(--bg); }
+        .screen.active { display: flex; animation: fade 0.5s; }
+        @keyframes fade { from { opacity:0; } to { opacity:1; } }
+
+        /* ELEMENTS */
+        .btn { width: 100%; padding: 16px; background: var(--gold); border: none; border-radius: 12px; font-weight: 700; font-size: 16px; margin-top: 20px; color: #000; transition: 0.2s; }
         .btn.pressed { transform: scale(0.95); opacity: 0.8; }
         
-        .input { width: 100%; padding: 16px; background: #222; border: 1px solid #333; border-radius: 12px; color: white; margin-bottom: 10px; outline: none; transition: 0.3s; }
-        .input.typing { border-color: var(--gold); background: #2a2a2a; }
+        .input { width: 100%; padding: 16px; background: #222; border: 1px solid #333; border-radius: 12px; color: white; margin-bottom: 10px; outline: none; transition: 0.3s; box-sizing: border-box; }
+        .input.focus { border-color: var(--gold); background: #2a2a2a; }
 
-        /* HEADER & DASHBOARD */
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .avatar { width:32px; height:32px; background:var(--gold); border-radius:50%; color:#000; font-weight:700; display:flex; align-items:center; justify-content:center; font-size:12px; }
+        .ai-card { background: linear-gradient(135deg, #1f1f1f, #121212); border: 1px solid #333; border-radius: 16px; padding: 20px; margin-bottom: 20px; transition: 0.3s; }
+        .ai-card.active { border-color: var(--gold); box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); }
         
-        /* AI CARD */
-        .ai-card { background: linear-gradient(135deg, #1f1f1f, #121212); border: 1px solid #333; border-radius: 16px; padding: 20px; margin-bottom: 20px; position: relative; overflow: hidden; transition: 0.3s; }
-        .ai-card.highlight { border-color: var(--gold); box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); transform: scale(1.02); }
-        .ai-badge { font-size: 10px; background: rgba(212, 175, 55, 0.2); color: var(--gold); padding: 4px 8px; border-radius: 6px; font-weight: 800; display: inline-block; margin-bottom: 8px; }
-
-        /* ACTIONS */
-        .actions { display: flex; gap: 15px; margin-bottom: 25px; }
-        .action-btn { flex: 1; background: #1c1c1e; padding: 15px; border-radius: 14px; text-align: center; border: 1px solid #2a2a2a; transition: 0.3s; }
-        .action-btn.active { background: var(--gold); color: #000; border-color: var(--gold); }
-        .plus-icon { font-size: 24px; display: block; margin-bottom: 5px; }
-        .action-label { font-size: 11px; font-weight: 600; }
-
-        /* CHART */
-        .card { background: var(--surface); border-radius: 16px; padding: 20px; margin-bottom: 20px; border: 1px solid #222; }
-        .chart-placeholder { height: 100px; display: flex; align-items: flex-end; gap: 6px; padding-top: 20px; }
-        .bar { flex: 1; background: #333; border-radius: 4px 4px 0 0; transition: 0.5s; }
-        .bar.active { background: var(--gold); box-shadow: 0 0 10px rgba(212, 175, 55, 0.4); }
-
-        /* LIST */
         .list-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #222; transition: 0.3s; }
-        .list-item.new-item { animation: slideIn 0.5s; background: rgba(52, 199, 89, 0.1); border-radius: 10px; padding: 10px; margin: 5px 0; }
-        .list-item.paid .amount { text-decoration: line-through; color: #666; }
-        .list-item.paid .status { display: block !important; }
+        .list-item.new { animation: slideIn 0.5s; background: rgba(52, 199, 89, 0.15); border-radius: 8px; padding: 10px; border-bottom: none; margin-bottom: 5px; }
+        .list-item.paid { opacity: 0.5; }
+        .list-item.paid .amount { text-decoration: line-through; }
         
         @keyframes slideIn { from { transform: translateX(-20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
-        .item-icon { width: 40px; height: 40px; background: #fff; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 2px; }
-        .item-icon img { width: 100%; height: 100%; object-fit: contain; border-radius: 8px; }
-
         /* NAV */
-        .nav { height: 70px; background: rgba(18,18,18,0.95); backdrop-filter: blur(10px); border-top: 1px solid #222; display: flex; justify-content: space-around; align-items: center; position: fixed; bottom: 0; width: 100%; }
-        .nav-item { opacity: 0.4; transition: 0.3s; text-align: center; }
-        .nav-item.active { opacity: 1; color: var(--gold); transform: translateY(-2px); }
+        .nav { height: 70px; background: rgba(18,18,18,0.95); border-top: 1px solid #222; display: flex; justify-content: space-around; align-items: center; position: fixed; bottom: 0; width: 100%; }
+        .nav-item { opacity: 0.4; transition: 0.3s; }
+        .nav-item.active { opacity: 1; color: var(--gold); transform: translateY(-3px); }
 
-        /* CURSOR GHOST (Wskaźnik wirtualny) */
-        .ghost-cursor {
-            position: absolute; width: 20px; height: 20px; background: rgba(255, 255, 255, 0.5);
-            border: 2px solid white; border-radius: 50%; pointer-events: none; z-index: 9999;
-            transition: all 0.5s ease; box-shadow: 0 0 10px rgba(255,255,255,0.5);
-            display: none; /* Domyślnie ukryty, pokazuje się przy akcjach */
-        }
-        .click-effect { animation: clickPulse 0.4s; }
-        @keyframes clickPulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
+        /* CHART */
+        .chart-placeholder { height: 120px; display: flex; align-items: flex-end; gap: 6px; padding-top: 20px; }
+        .bar { flex: 1; background: #333; border-radius: 4px 4px 0 0; transition: 0.5s; }
+        .bar.active { background: var(--gold); height: 80% !important; }
 
-        /* TOAST NOTIFICATION */
-        .toast {
-            position: absolute; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px);
-            background: #333; color: #fff; padding: 10px 20px; border-radius: 30px;
-            font-size: 12px; opacity: 0; transition: 0.4s; pointer-events: none; white-space: nowrap;
-            display: flex; gap: 8px; align-items: center; box-shadow: 0 5px 20px rgba(0,0,0,0.5); z-index: 1000;
-        }
+        /* TOAST */
+        .toast { position: absolute; top: 50px; left: 50%; transform: translateX(-50%) translateY(-20px); background: #333; color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 12px; opacity: 0; transition: 0.3s; z-index: 200; pointer-events: none; white-space: nowrap; }
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     </style>
 </head>
 <body>
 
-    <div class="ghost-cursor" id="cursor"></div>
-    <div class="toast" id="toast"><span>🤖</span> <span id="toast-text">AI Action</span></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="toast" id="toast">🤖 AI Action</div>
 
-    <div class="screen-container">
-        
-        <div id="screen-login" class="screen active" style="justify-content: center; align-items: center; text-align: center;">
-            <img src="../assets/conciergepaylogo.png" width="80" style="margin-bottom: 20px; opacity: 0.8;" onerror="this.style.display='none'">
-            <h1 style="font-size: 24px; margin-bottom: 10px;">ConciergePay</h1>
-            <p style="color: #666; margin-bottom: 30px; font-size: 14px;">Autopilot dla Twoich finansów.</p>
-            
-            <input type="email" class="input" id="login-email" value="" placeholder="Email">
-            <input type="password" class="input" id="login-pass" value="" placeholder="Hasło">
-            
-            <button class="btn" id="btn-login">Zaloguj się</button>
+    <div id="screen-login" class="screen active" style="justify-content: center; align-items: center;">
+        <img src="../assets/conciergepaylogo.png" width="80" style="margin-bottom:20px; opacity:0.8;" onerror="this.style.display='none'">
+        <h2 style="margin-bottom: 5px;">Witaj ponownie</h2>
+        <p style="color:#666; font-size:13px; margin-bottom:30px;">Zaloguj się do ConciergePay</p>
+        <input type="text" class="input" id="inp-email" placeholder="Email" readonly>
+        <input type="password" class="input" id="inp-pass" placeholder="Hasło" readonly>
+        <button class="btn" id="btn-login">Zaloguj się</button>
+    </div>
+
+    <div id="screen-dashboard" class="screen">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <div><div style="font-size:12px; color:#888;">DZIEŃ DOBRY</div><div style="font-size:20px; font-weight:700;">Alex 👋</div></div>
+            <div style="width:32px; height:32px; background:var(--gold); border-radius:50%; display:flex; align-items:center; justify-content:center; color:#000; font-weight:700; font-size:12px;">AK</div>
         </div>
 
-        <div id="screen-dashboard" class="screen">
-            <div class="header">
-                <div>
-                    <div style="font-size:12px; color:#888;">DZIEŃ DOBRY</div>
-                    <div style="font-size:20px; font-weight:700;">Alex 👋</div>
-                </div>
-                <div class="avatar">AK</div>
-            </div>
+        <div class="ai-card" id="ai-card">
+            <div style="font-size:10px; color:var(--gold); font-weight:800; margin-bottom:5px;">✨ AI INSIGHT</div>
+            <div id="ai-text" style="font-size:13px; color:#ccc;">Analizuję wydatki...</div>
+            <div id="ai-value" style="font-size:22px; font-weight:700; color:var(--gold); margin-top:5px;">...</div>
+        </div>
 
-            <div class="ai-card" id="ai-card">
-                <div class="ai-badge">✨ CONCIERGE AI</div>
-                <div style="font-size:13px; color:#ccc; margin-bottom:5px;">Skanuję Twoje umowy...</div>
-                <div style="font-size:24px; font-weight:700; color:var(--gold);" id="ai-savings">Analiza...</div>
+        <div style="display:flex; gap:10px; margin-bottom:20px;">
+            <div id="btn-scan" style="flex:1; background:#1c1c1e; padding:15px; border-radius:12px; text-align:center; border:1px solid #333;">
+                <span style="font-size:20px; color:var(--gold); display:block;">+</span>
+                <span style="font-size:10px;">Skanuj</span>
             </div>
+            <div style="flex:1; background:#1c1c1e; padding:15px; border-radius:12px; text-align:center; border:1px solid #333;">
+                <span style="font-size:20px; display:block;">⚡</span>
+                <span style="font-size:10px;">Integracje</span>
+            </div>
+        </div>
 
-            <div class="actions">
-                <div class="action-btn" id="btn-scan">
-                    <span class="plus-icon">+</span>
-                    <span class="action-label">Skanuj</span>
-                </div>
-                <div class="action-btn">
-                    <span class="plus-icon">⚡</span>
-                    <span class="action-label">Integracje</span>
-                </div>
+        <div style="background:#1c1c1e; padding:15px; border-radius:16px; margin-bottom:20px;">
+            <div style="font-size:12px; color:#888;">Wydatki</div>
+            <div class="chart-placeholder">
+                <div class="bar" style="height:30%"></div><div class="bar" style="height:50%"></div><div class="bar" style="height:40%"></div>
+                <div class="bar" id="bar-active" style="height:60%"></div>
+                <div class="bar" style="height:45%"></div><div class="bar" style="height:70%"></div>
             </div>
-            
-            <div class="card">
-                <div style="font-size:12px; color:#888;">Wydatki</div>
-                <div class="chart-placeholder">
-                    <div class="bar" style="height: 30%;"></div>
-                    <div class="bar" style="height: 50%;"></div>
-                    <div class="bar" style="height: 40%;"></div>
-                    <div class="bar active" style="height: 85%;"></div>
-                    <div class="bar" style="height: 60%;"></div>
-                    <div class="bar" style="height: 45%;"></div>
-                    <div class="bar" style="height: 70%;"></div>
-                </div>
-            </div>
+        </div>
 
-            <h3 style="font-size:12px; color:#666; text-transform:uppercase; margin-bottom:10px;">Do zapłaty</h3>
-            <div id="transactions-list">
-                <div class="list-item" id="bill-1">
-                    <div style="display:flex; gap:12px; align-items:center;">
-                        <div class="item-icon"><img src="../assets/play.png" onerror="this.src='https://via.placeholder.com/40'"></div>
-                        <div><div style="font-weight:600;">Play</div><div style="font-size:12px; color:#666;">Internet</div></div>
-                    </div>
-                    <div><span class="amount" style="font-weight:700;">-55,00 zł</span><span class="status" style="display:none; font-size:10px; color:var(--success);">Opłacono</span></div>
+        <div style="font-size:12px; color:#666; margin-bottom:10px;">DO ZAPŁATY</div>
+        <div id="list">
+            <div class="list-item">
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <div style="width:36px; height:36px; background:#fff; border-radius:8px; display:flex; align-items:center; justify-content:center;"><img src="../assets/play.png" width="20" onerror="this.style.display='none'"></div>
+                    <div><div style="font-weight:600; font-size:14px;">Play</div><div style="font-size:11px; color:#666;">Internet</div></div>
                 </div>
+                <div class="amount" style="font-weight:700; font-size:14px;">-55,00 zł</div>
             </div>
         </div>
     </div>
 
-    <div class="nav" id="main-nav" style="opacity:0;">
-        <div class="nav-item active" id="nav-home"><span>🏠</span></div>
-        <div class="nav-item" id="nav-stats"><span>📊</span></div>
-        <div class="nav-item" id="nav-profile"><span>👤</span></div>
+    <div class="nav">
+        <div class="nav-item active">🏠</div><div class="nav-item">📊</div><div class="nav-item">👤</div>
     </div>
 
     <script>
-        // --- KONFIGURACJA AUTOMATYZACJI ---
-        const DEMO_SPEED = 1000; // Bazowa jednostka czasu (1s)
-
-        function wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+        const cursor = document.getElementById('cursor');
         
-        function showToast(text, icon="🤖") {
+        function moveCursor(targetId, offsetX=0, offsetY=0) {
+            const el = document.getElementById(targetId);
+            if(!el) return;
+            const rect = el.getBoundingClientRect();
+            // Przesuwamy kursor na środek elementu
+            cursor.style.top = (rect.top + rect.height/2 + offsetY) + "px";
+            cursor.style.left = (rect.left + rect.width/2 + offsetX) + "px";
+        }
+
+        function clickCursor() {
+            cursor.classList.add('click');
+            setTimeout(() => cursor.classList.remove('click'), 200);
+        }
+
+        function type(id, text) {
+            document.getElementById(id).classList.add('focus');
+            document.getElementById(id).value = text;
+        }
+
+        function showToast(msg) {
             const t = document.getElementById('toast');
-            document.getElementById('toast-text').innerText = text;
-            t.querySelector('span').innerText = icon;
-            t.classList.add('show');
+            t.innerText = msg; t.classList.add('show');
             setTimeout(() => t.classList.remove('show'), 2000);
         }
 
-        async function startDemoLoop() {
+        async function runDemo() {
             while(true) {
                 // RESET
-                resetState();
-                await wait(DEMO_SPEED);
+                document.getElementById('screen-dashboard').classList.remove('active');
+                document.getElementById('screen-login').classList.add('active');
+                document.getElementById('inp-email').value = "";
+                document.getElementById('inp-pass').value = "";
+                document.getElementById('list').innerHTML = `
+                    <div class="list-item"><div style="display:flex; gap:10px; align-items:center;"><div style="width:36px; height:36px; background:#fff; border-radius:8px; display:flex; align-items:center; justify-content:center;"><img src="../assets/play.png" width="20" onerror="this.style.display='none'"></div><div><div style="font-weight:600; font-size:14px;">Play</div><div style="font-size:11px; color:#666;">Internet</div></div></div><div class="amount" style="font-weight:700; font-size:14px;">-55,00 zł</div></div>
+                `;
+                
+                await new Promise(r => setTimeout(r, 1000));
 
-                // 1. WPISYWANIE HASŁA
-                document.getElementById('login-email').classList.add('typing');
-                document.getElementById('login-email').value = "alex@concierge.com";
-                await wait(DEMO_SPEED * 0.5);
-                document.getElementById('login-pass').classList.add('typing');
-                document.getElementById('login-pass').value = "********";
-                await wait(DEMO_SPEED);
+                // 1. WPISZ EMAIL
+                moveCursor('inp-email');
+                await new Promise(r => setTimeout(r, 800));
+                type('inp-email', 'alex@concierge.com');
+                await new Promise(r => setTimeout(r, 600));
 
-                // 2. LOGOWANIE
-                const loginBtn = document.getElementById('btn-login');
-                loginBtn.classList.add('pressed');
-                loginBtn.innerText = "Weryfikacja Face ID...";
-                showToast("Weryfikacja biometryczna...", "FaceID");
-                await wait(DEMO_SPEED * 1.5);
+                // 2. KLIKNIJ LOGIN
+                moveCursor('btn-login');
+                await new Promise(r => setTimeout(r, 800));
+                clickCursor();
+                document.getElementById('btn-login').classList.add('pressed');
+                showToast("🔓 Weryfikacja FaceID...");
+                await new Promise(r => setTimeout(r, 1000));
 
-                // 3. PRZEJŚCIE DO DASHBOARDU
+                // 3. PRZEJŚCIE
                 document.getElementById('screen-login').classList.remove('active');
                 document.getElementById('screen-dashboard').classList.add('active');
-                document.getElementById('main-nav').style.opacity = '1';
-                showToast("Zalogowano pomyślnie", "✅");
-                await wait(DEMO_SPEED * 2);
+                
+                // 4. AI ANALIZA
+                moveCursor('ai-card');
+                await new Promise(r => setTimeout(r, 1000));
+                document.getElementById('ai-card').classList.add('active');
+                document.getElementById('ai-text').innerText = "Znaleziono tańszy prąd (E.ON)";
+                document.getElementById('ai-value').innerText = "+450 PLN / rok";
+                clickCursor();
+                showToast("💰 Znaleziono oszczędności!");
+                await new Promise(r => setTimeout(r, 2000));
 
-                // 4. ANALIZA AI
-                const aiCard = document.getElementById('ai-card');
-                aiCard.classList.add('highlight');
-                document.getElementById('ai-savings').innerText = "+450 PLN / rok";
-                showToast("AI znalazło oszczędności!", "💰");
-                await wait(DEMO_SPEED * 2);
-                aiCard.classList.remove('highlight');
-
-                // 5. SKANOWANIE NOWEJ FAKTURY
-                const scanBtn = document.getElementById('btn-scan');
-                scanBtn.classList.add('active');
-                showToast("AI skanuje skrzynkę mailową...", "📧");
-                await wait(DEMO_SPEED * 1.5);
-                scanBtn.classList.remove('active');
-
-                // Dodanie nowego elementu
-                const list = document.getElementById('transactions-list');
+                // 5. DODAJ RACHUNEK
+                moveCursor('btn-scan');
+                await new Promise(r => setTimeout(r, 1000));
+                clickCursor();
+                showToast("📸 Skanowanie faktury...");
+                await new Promise(r => setTimeout(r, 1500));
+                
+                // Dodaj nowy element
+                const list = document.getElementById('list');
                 const newItem = document.createElement('div');
-                newItem.className = 'list-item new-item';
-                newItem.innerHTML = `
-                    <div style="display:flex; gap:12px; align-items:center;">
-                        <div class="item-icon" style="background:#ff7900;"><span style="font-weight:700;">O</span></div>
-                        <div><div style="font-weight:600;">Orange</div><div style="font-size:12px; color:#666;">Nowa faktura</div></div>
-                    </div>
-                    <div><span class="amount" style="font-weight:700;">-49,99 zł</span><span class="status" style="display:none; font-size:10px; color:var(--success);">Opłacono</span></div>
-                `;
+                newItem.className = 'list-item new';
+                newItem.innerHTML = `<div style="display:flex; gap:10px; align-items:center;"><div style="width:36px; height:36px; background:#ff7900; color:white; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:700;">O</div><div><div style="font-weight:600; font-size:14px;">Orange</div><div style="font-size:11px; color:#666;">Nowa faktura</div></div></div><div class="amount" style="font-weight:700; font-size:14px;">-49,99 zł</div>`;
                 list.prepend(newItem);
-                showToast("Pobrano fakturę Orange", "📥");
-                await wait(DEMO_SPEED * 2);
-
-                // 6. AUTOMATYCZNA PŁATNOŚĆ
-                newItem.style.background = "#333"; // highlight
-                await wait(DEMO_SPEED * 0.5);
+                
+                // 6. OPŁAĆ
+                moveCursor('list', 0, -40); // Troszkę wyżej na nowy element
+                await new Promise(r => setTimeout(r, 1000));
+                clickCursor();
                 newItem.classList.add('paid');
-                showToast("Opłacono automatycznie", "💸");
-                await wait(DEMO_SPEED * 3);
-
-                // 7. KONIEC PĘTLI
-                document.getElementById('screen-dashboard').style.opacity = '0';
-                document.getElementById('main-nav').style.opacity = '0';
-                await wait(500);
+                showToast("💸 Opłacono pomyślnie!");
+                document.getElementById('bar-active').classList.add('active');
+                
+                await new Promise(r => setTimeout(r, 3000));
+                // RESTART
             }
         }
 
-        function resetState() {
-            // Czyścimy wszystko do stanu początkowego
-            document.querySelectorAll('.screen').forEach(s => {
-                s.classList.remove('active');
-                s.style.opacity = '1';
-            });
-            document.getElementById('screen-login').classList.add('active');
-            
-            document.getElementById('login-email').value = "";
-            document.getElementById('login-email').classList.remove('typing');
-            document.getElementById('login-pass').value = "";
-            document.getElementById('login-pass').classList.remove('typing');
-            
-            document.getElementById('btn-login').classList.remove('pressed');
-            document.getElementById('btn-login').innerText = "Zaloguj się";
-            
-            document.getElementById('ai-savings').innerText = "Analiza...";
-            
-            // Reset listy
-            document.getElementById('transactions-list').innerHTML = `
-                <div class="list-item" id="bill-1">
-                    <div style="display:flex; gap:12px; align-items:center;">
-                        <div class="item-icon"><img src="../assets/play.png" onerror="this.src='https://via.placeholder.com/40'"></div>
-                        <div><div style="font-weight:600;">Play</div><div style="font-size:12px; color:#666;">Internet</div></div>
-                    </div>
-                    <div><span class="amount" style="font-weight:700;">-55,00 zł</span><span class="status" style="display:none; font-size:10px; color:var(--success);">Opłacono</span></div>
-                </div>
-            `;
-        }
-
-        // Start
-        window.onload = startDemoLoop;
+        // Startujemy po załadowaniu
+        setTimeout(runDemo, 500);
 
     </script>
 </body>

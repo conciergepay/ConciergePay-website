@@ -3,69 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ConciergePay App</title>
+    <title>ConciergePay Auto-Demo</title>
     <style>
-        /* --- SYSTEM APP PREMIUM --- */
+        /* --- SYSTEM PREMIUM --- */
         :root { --bg: #000000; --surface: #121212; --text: #FFFFFF; --text-sub: #999; --gold: #D4AF37; --success: #34C759; }
-        body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: -apple-system, sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: -apple-system, sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; user-select: none; }
         
         .screen-container { flex: 1; position: relative; overflow: hidden; }
-        .screen { display: none; padding: 20px; height: 100%; overflow-y: auto; box-sizing: border-box; padding-bottom: 80px; }
-        .screen.active { display: flex; flex-direction: column; animation: fade 0.4s; }
+        .screen { position: absolute; top:0; left:0; width:100%; height:100%; display: none; padding: 20px; box-sizing: border-box; flex-direction: column; transition: opacity 0.5s; }
+        .screen.active { display: flex; animation: fade 0.5s; }
         @keyframes fade { from { opacity:0; transform: scale(0.98); } to { opacity:1; transform: scale(1); } }
 
         /* UI ELEMENTS */
-        .btn { width: 100%; padding: 16px; background: var(--gold); border: none; border-radius: 12px; font-weight: 700; font-size: 16px; margin-top: 20px; cursor: pointer; color: #000; }
-        .input { width: 100%; padding: 16px; background: #222; border: 1px solid #333; border-radius: 12px; color: white; margin-bottom: 10px; outline: none; }
-        .input:focus { border-color: var(--gold); }
+        .btn { width: 100%; padding: 16px; background: var(--gold); border: none; border-radius: 12px; font-weight: 700; font-size: 16px; margin-top: 20px; color: #000; transition: 0.3s; }
+        .btn.pressed { transform: scale(0.95); opacity: 0.8; }
+        
+        .input { width: 100%; padding: 16px; background: #222; border: 1px solid #333; border-radius: 12px; color: white; margin-bottom: 10px; outline: none; transition: 0.3s; }
+        .input.typing { border-color: var(--gold); background: #2a2a2a; }
 
         /* HEADER & DASHBOARD */
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .avatar { width:32px; height:32px; background:var(--gold); border-radius:50%; color:#000; font-weight:700; display:flex; align-items:center; justify-content:center; font-size:12px; }
         
         /* AI CARD */
-        .ai-card { background: linear-gradient(135deg, #1f1f1f, #121212); border: 1px solid #333; border-radius: 16px; padding: 20px; margin-bottom: 20px; cursor: pointer; position: relative; overflow: hidden; }
-        .ai-card:active { transform: scale(0.98); }
+        .ai-card { background: linear-gradient(135deg, #1f1f1f, #121212); border: 1px solid #333; border-radius: 16px; padding: 20px; margin-bottom: 20px; position: relative; overflow: hidden; transition: 0.3s; }
+        .ai-card.highlight { border-color: var(--gold); box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); transform: scale(1.02); }
         .ai-badge { font-size: 10px; background: rgba(212, 175, 55, 0.2); color: var(--gold); padding: 4px 8px; border-radius: 6px; font-weight: 800; display: inline-block; margin-bottom: 8px; }
 
-        /* ACTIONS ROW (SCANNER) */
+        /* ACTIONS */
         .actions { display: flex; gap: 15px; margin-bottom: 25px; }
-        .action-btn { flex: 1; background: #1c1c1e; padding: 15px; border-radius: 14px; text-align: center; cursor: pointer; border: 1px solid #2a2a2a; transition: 0.2s; }
-        .action-btn:active { border-color: var(--gold); background: #222; }
-        .plus-icon { font-size: 24px; color: var(--gold); display: block; margin-bottom: 5px; }
-        .action-label { font-size: 11px; color: #888; font-weight: 600; }
+        .action-btn { flex: 1; background: #1c1c1e; padding: 15px; border-radius: 14px; text-align: center; border: 1px solid #2a2a2a; transition: 0.3s; }
+        .action-btn.active { background: var(--gold); color: #000; border-color: var(--gold); }
+        .plus-icon { font-size: 24px; display: block; margin-bottom: 5px; }
+        .action-label { font-size: 11px; font-weight: 600; }
 
         /* CHART */
         .card { background: var(--surface); border-radius: 16px; padding: 20px; margin-bottom: 20px; border: 1px solid #222; }
         .chart-placeholder { height: 100px; display: flex; align-items: flex-end; gap: 6px; padding-top: 20px; }
-        .bar { flex: 1; background: #333; border-radius: 4px 4px 0 0; transition: 0.3s; }
+        .bar { flex: 1; background: #333; border-radius: 4px 4px 0 0; transition: 0.5s; }
         .bar.active { background: var(--gold); box-shadow: 0 0 10px rgba(212, 175, 55, 0.4); }
 
         /* LIST */
-        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #222; cursor: pointer; }
+        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #222; transition: 0.3s; }
+        .list-item.new-item { animation: slideIn 0.5s; background: rgba(52, 199, 89, 0.1); border-radius: 10px; padding: 10px; margin: 5px 0; }
+        .list-item.paid .amount { text-decoration: line-through; color: #666; }
+        .list-item.paid .status { display: block !important; }
+        
+        @keyframes slideIn { from { transform: translateX(-20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
         .item-icon { width: 40px; height: 40px; background: #fff; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 2px; }
         .item-icon img { width: 100%; height: 100%; object-fit: contain; border-radius: 8px; }
 
         /* NAV */
         .nav { height: 70px; background: rgba(18,18,18,0.95); backdrop-filter: blur(10px); border-top: 1px solid #222; display: flex; justify-content: space-around; align-items: center; position: fixed; bottom: 0; width: 100%; }
-        .nav-item { opacity: 0.4; cursor: pointer; transition: 0.2s; text-align: center; }
-        .nav-item.active { opacity: 1; color: var(--gold); }
+        .nav-item { opacity: 0.4; transition: 0.3s; text-align: center; }
+        .nav-item.active { opacity: 1; color: var(--gold); transform: translateY(-2px); }
+
+        /* CURSOR GHOST (Wskaźnik wirtualny) */
+        .ghost-cursor {
+            position: absolute; width: 20px; height: 20px; background: rgba(255, 255, 255, 0.5);
+            border: 2px solid white; border-radius: 50%; pointer-events: none; z-index: 9999;
+            transition: all 0.5s ease; box-shadow: 0 0 10px rgba(255,255,255,0.5);
+            display: none; /* Domyślnie ukryty, pokazuje się przy akcjach */
+        }
+        .click-effect { animation: clickPulse 0.4s; }
+        @keyframes clickPulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
+
+        /* TOAST NOTIFICATION */
+        .toast {
+            position: absolute; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px);
+            background: #333; color: #fff; padding: 10px 20px; border-radius: 30px;
+            font-size: 12px; opacity: 0; transition: 0.4s; pointer-events: none; white-space: nowrap;
+            display: flex; gap: 8px; align-items: center; box-shadow: 0 5px 20px rgba(0,0,0,0.5); z-index: 1000;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     </style>
 </head>
 <body>
+
+    <div class="ghost-cursor" id="cursor"></div>
+    <div class="toast" id="toast"><span>🤖</span> <span id="toast-text">AI Action</span></div>
 
     <div class="screen-container">
         
         <div id="screen-login" class="screen active" style="justify-content: center; align-items: center; text-align: center;">
             <img src="../assets/conciergepaylogo.png" width="80" style="margin-bottom: 20px; opacity: 0.8;" onerror="this.style.display='none'">
-            <h1 style="font-size: 24px; margin-bottom: 10px;">Witaj ponownie</h1>
-            <p style="color: #666; margin-bottom: 30px; font-size: 14px;">Zaloguj się, aby zarządzać finansami.</p>
+            <h1 style="font-size: 24px; margin-bottom: 10px;">ConciergePay</h1>
+            <p style="color: #666; margin-bottom: 30px; font-size: 14px;">Autopilot dla Twoich finansów.</p>
             
-            <input type="email" class="input" value="inwestor@concierge.com" readonly>
-            <input type="password" class="input" value="********" readonly>
+            <input type="email" class="input" id="login-email" value="" placeholder="Email">
+            <input type="password" class="input" id="login-pass" value="" placeholder="Hasło">
             
-            <button class="btn" onclick="handleLogin()">Zaloguj się</button>
-            <p style="margin-top: 20px; font-size: 12px; color: var(--gold);">Face ID zweryfikowane 🔓</p>
+            <button class="btn" id="btn-login">Zaloguj się</button>
         </div>
 
         <div id="screen-dashboard" class="screen">
@@ -74,28 +103,28 @@
                     <div style="font-size:12px; color:#888;">DZIEŃ DOBRY</div>
                     <div style="font-size:20px; font-weight:700;">Alex 👋</div>
                 </div>
-                <div class="avatar" onclick="switchTab('screen-profile', document.getElementById('nav-profile'))">AK</div>
+                <div class="avatar">AK</div>
             </div>
 
-            <div class="ai-card" onclick="alert('🤖 AI ANALIZA:\n\nZnaleziono lepszą ofertę prądu.\nOperator: E.ON\nOszczędność: 450 PLN/rok\n\nKliknij OK, aby zmienić umowę automatycznie.')">
+            <div class="ai-card" id="ai-card">
                 <div class="ai-badge">✨ CONCIERGE AI</div>
-                <div style="font-size:13px; color:#ccc; margin-bottom:5px;">Masz nową rekomendację oszczędności.</div>
-                <div style="font-size:24px; font-weight:700; color:var(--gold);">+450 PLN / rok</div>
+                <div style="font-size:13px; color:#ccc; margin-bottom:5px;">Skanuję Twoje umowy...</div>
+                <div style="font-size:24px; font-weight:700; color:var(--gold);" id="ai-savings">Analiza...</div>
             </div>
 
             <div class="actions">
-                <div class="action-btn" onclick="simulateScan()">
+                <div class="action-btn" id="btn-scan">
                     <span class="plus-icon">+</span>
-                    <span class="action-label">Dodaj / Skanuj</span>
+                    <span class="action-label">Skanuj</span>
                 </div>
-                <div class="action-btn" onclick="alert('Łączę z Play24...')">
+                <div class="action-btn">
                     <span class="plus-icon">⚡</span>
                     <span class="action-label">Integracje</span>
                 </div>
             </div>
             
             <div class="card">
-                <div style="font-size:12px; color:#888;">Wydatki (Ostatnie 7 dni)</div>
+                <div style="font-size:12px; color:#888;">Wydatki</div>
                 <div class="chart-placeholder">
                     <div class="bar" style="height: 30%;"></div>
                     <div class="bar" style="height: 50%;"></div>
@@ -107,99 +136,144 @@
                 </div>
             </div>
 
-            <h3 style="font-size:12px; color:#666; text-transform:uppercase; margin-bottom:10px;">Ostatnie rachunki</h3>
+            <h3 style="font-size:12px; color:#666; text-transform:uppercase; margin-bottom:10px;">Do zapłaty</h3>
             <div id="transactions-list">
-                <div class="list-item" onclick="payBill(this, '55.00')">
+                <div class="list-item" id="bill-1">
                     <div style="display:flex; gap:12px; align-items:center;">
                         <div class="item-icon"><img src="../assets/play.png" onerror="this.src='https://via.placeholder.com/40'"></div>
                         <div><div style="font-weight:600;">Play</div><div style="font-size:12px; color:#666;">Internet</div></div>
                     </div>
                     <div><span class="amount" style="font-weight:700;">-55,00 zł</span><span class="status" style="display:none; font-size:10px; color:var(--success);">Opłacono</span></div>
                 </div>
-                <div class="list-item" onclick="payBill(this, '79.84')">
-                    <div style="display:flex; gap:12px; align-items:center;">
-                        <div class="item-icon"><img src="../assets/eonlogo.png" onerror="this.src='https://via.placeholder.com/40'"></div>
-                        <div><div style="font-weight:600;">E.ON</div><div style="font-size:12px; color:#666;">Energia</div></div>
-                    </div>
-                    <div><span class="amount" style="font-weight:700;">-79,84 zł</span><span class="status" style="display:none; font-size:10px; color:var(--success);">Opłacono</span></div>
-                </div>
-            </div>
-        </div>
-
-        <div id="screen-profile" class="screen">
-            <div style="text-align:center; margin-top:40px;">
-                <div class="avatar" style="width:80px; height:80px; font-size:24px; margin:0 auto 15px;">AK</div>
-                <h2>Alex Kowalski</h2>
-                <p style="color:var(--gold); font-size:12px;">Premium Member</p>
-                <div style="margin-top:30px; text-align:left;">
-                    <div class="list-item"><span>🔔 Powiadomienia</span><span style="color:var(--success)">Wł</span></div>
-                    <div class="list-item"><span>🔒 Face ID</span><span style="color:var(--success)">Wł</span></div>
-                    <div class="list-item" onclick="switchTab('screen-login', null); alert('Wylogowano')"><span style="color:red">Wyloguj się</span></div>
-                </div>
             </div>
         </div>
     </div>
 
-    <div class="nav" id="main-nav" style="display:none;">
-        <div class="nav-item active" onclick="switchTab('screen-dashboard', this)"><span>🏠</span><span style="font-size:10px; display:block;">Start</span></div>
-        <div class="nav-item" onclick="switchTab('screen-profile', this)"><span>👤</span><span style="font-size:10px; display:block;">Profil</span></div>
+    <div class="nav" id="main-nav" style="opacity:0;">
+        <div class="nav-item active" id="nav-home"><span>🏠</span></div>
+        <div class="nav-item" id="nav-stats"><span>📊</span></div>
+        <div class="nav-item" id="nav-profile"><span>👤</span></div>
     </div>
 
     <script>
-        // LOGOWANIE
-        function handleLogin() {
-            const btn = document.querySelector('.btn');
-            btn.innerHTML = "Weryfikacja...";
-            setTimeout(() => {
-                document.getElementById('screen-login').style.display = 'none';
-                document.getElementById('screen-dashboard').style.display = 'block';
-                document.getElementById('main-nav').style.display = 'flex';
-                // Animacja wejścia dashboardu
+        // --- KONFIGURACJA AUTOMATYZACJI ---
+        const DEMO_SPEED = 1000; // Bazowa jednostka czasu (1s)
+
+        function wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+        
+        function showToast(text, icon="🤖") {
+            const t = document.getElementById('toast');
+            document.getElementById('toast-text').innerText = text;
+            t.querySelector('span').innerText = icon;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2000);
+        }
+
+        async function startDemoLoop() {
+            while(true) {
+                // RESET
+                resetState();
+                await wait(DEMO_SPEED);
+
+                // 1. WPISYWANIE HASŁA
+                document.getElementById('login-email').classList.add('typing');
+                document.getElementById('login-email').value = "alex@concierge.com";
+                await wait(DEMO_SPEED * 0.5);
+                document.getElementById('login-pass').classList.add('typing');
+                document.getElementById('login-pass').value = "********";
+                await wait(DEMO_SPEED);
+
+                // 2. LOGOWANIE
+                const loginBtn = document.getElementById('btn-login');
+                loginBtn.classList.add('pressed');
+                loginBtn.innerText = "Weryfikacja Face ID...";
+                showToast("Weryfikacja biometryczna...", "FaceID");
+                await wait(DEMO_SPEED * 1.5);
+
+                // 3. PRZEJŚCIE DO DASHBOARDU
+                document.getElementById('screen-login').classList.remove('active');
                 document.getElementById('screen-dashboard').classList.add('active');
-            }, 1000);
+                document.getElementById('main-nav').style.opacity = '1';
+                showToast("Zalogowano pomyślnie", "✅");
+                await wait(DEMO_SPEED * 2);
+
+                // 4. ANALIZA AI
+                const aiCard = document.getElementById('ai-card');
+                aiCard.classList.add('highlight');
+                document.getElementById('ai-savings').innerText = "+450 PLN / rok";
+                showToast("AI znalazło oszczędności!", "💰");
+                await wait(DEMO_SPEED * 2);
+                aiCard.classList.remove('highlight');
+
+                // 5. SKANOWANIE NOWEJ FAKTURY
+                const scanBtn = document.getElementById('btn-scan');
+                scanBtn.classList.add('active');
+                showToast("AI skanuje skrzynkę mailową...", "📧");
+                await wait(DEMO_SPEED * 1.5);
+                scanBtn.classList.remove('active');
+
+                // Dodanie nowego elementu
+                const list = document.getElementById('transactions-list');
+                const newItem = document.createElement('div');
+                newItem.className = 'list-item new-item';
+                newItem.innerHTML = `
+                    <div style="display:flex; gap:12px; align-items:center;">
+                        <div class="item-icon" style="background:#ff7900;"><span style="font-weight:700;">O</span></div>
+                        <div><div style="font-weight:600;">Orange</div><div style="font-size:12px; color:#666;">Nowa faktura</div></div>
+                    </div>
+                    <div><span class="amount" style="font-weight:700;">-49,99 zł</span><span class="status" style="display:none; font-size:10px; color:var(--success);">Opłacono</span></div>
+                `;
+                list.prepend(newItem);
+                showToast("Pobrano fakturę Orange", "📥");
+                await wait(DEMO_SPEED * 2);
+
+                // 6. AUTOMATYCZNA PŁATNOŚĆ
+                newItem.style.background = "#333"; // highlight
+                await wait(DEMO_SPEED * 0.5);
+                newItem.classList.add('paid');
+                showToast("Opłacono automatycznie", "💸");
+                await wait(DEMO_SPEED * 3);
+
+                // 7. KONIEC PĘTLI
+                document.getElementById('screen-dashboard').style.opacity = '0';
+                document.getElementById('main-nav').style.opacity = '0';
+                await wait(500);
+            }
         }
 
-        // NAWIGACJA
-        function switchTab(screenId, navItem) {
-            document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
-            document.getElementById(screenId).style.display = 'block';
+        function resetState() {
+            // Czyścimy wszystko do stanu początkowego
+            document.querySelectorAll('.screen').forEach(s => {
+                s.classList.remove('active');
+                s.style.opacity = '1';
+            });
+            document.getElementById('screen-login').classList.add('active');
             
-            if(navItem) {
-                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-                navItem.classList.add('active');
-            }
+            document.getElementById('login-email').value = "";
+            document.getElementById('login-email').classList.remove('typing');
+            document.getElementById('login-pass').value = "";
+            document.getElementById('login-pass').classList.remove('typing');
+            
+            document.getElementById('btn-login').classList.remove('pressed');
+            document.getElementById('btn-login').innerText = "Zaloguj się";
+            
+            document.getElementById('ai-savings').innerText = "Analiza...";
+            
+            // Reset listy
+            document.getElementById('transactions-list').innerHTML = `
+                <div class="list-item" id="bill-1">
+                    <div style="display:flex; gap:12px; align-items:center;">
+                        <div class="item-icon"><img src="../assets/play.png" onerror="this.src='https://via.placeholder.com/40'"></div>
+                        <div><div style="font-weight:600;">Play</div><div style="font-size:12px; color:#666;">Internet</div></div>
+                    </div>
+                    <div><span class="amount" style="font-weight:700;">-55,00 zł</span><span class="status" style="display:none; font-size:10px; color:var(--success);">Opłacono</span></div>
+                </div>
+            `;
         }
 
-        // SYMULACJA SKANOWANIA
-        function simulateScan() {
-            if(confirm("📸 Uruchomić aparat, aby zeskanować fakturę?")) {
-                setTimeout(() => {
-                    alert("✅ Sukces! Faktura z 'Orange' została rozpoznana.\nKwota: 49.99 PLN\nTermin: 14 dni.");
-                    // Dodaj dynamicznie do listy
-                    const list = document.getElementById('transactions-list');
-                    const newItem = document.createElement('div');
-                    newItem.className = 'list-item';
-                    newItem.innerHTML = `
-                        <div style="display:flex; gap:12px; align-items:center;">
-                            <div class="item-icon" style="background:#ff7900;"><span style="font-size:20px;">O</span></div>
-                            <div><div style="font-weight:600;">Orange</div><div style="font-size:12px; color:#666;">Nowy!</div></div>
-                        </div>
-                        <div><span style="font-weight:700;">-49,99 zł</span></div>
-                    `;
-                    list.prepend(newItem);
-                }, 1000);
-            }
-        }
+        // Start
+        window.onload = startDemoLoop;
 
-        // PŁATNOŚĆ
-        function payBill(el, amount) {
-            const price = el.querySelector('.amount');
-            const status = el.querySelector('.status');
-            if(price.style.display !== 'none' && confirm("Zapłacić " + amount + " zł?")) {
-                price.style.display = 'none';
-                status.style.display = 'block';
-            }
-        }
     </script>
 </body>
 </html>

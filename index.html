@@ -153,8 +153,10 @@
                     Twój osobisty asystent finansowy. Jeden interfejs, zero stresu, automatyczne oszczędności.
                 </p>
                 <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                    <a href="#pricing" class="btn btn-primary">Dołącz do Bety</a>
-                </div>
+    <a href="mailto:b4ozl2b3r63hegj0gs5prq19pnvc5jsm@hook.eu1.make.com?subject=Test%20AI%20ConciergePay" class="btn btn-primary">
+        Try Me - Wyślij fakturę
+    </a>
+</div>  
             </div>
             <div class="phone-frame">
                 <iframe src="app/index.html" class="app-iframe" title="App Demo"></iframe>
@@ -307,10 +309,33 @@
                 Zintegrowani z systemem bankowym przez Open Banking API.
             </p>
             
-            <form action="https://formsubmit.co/WPISZ_TU_SWOJ_EMAIL" method="POST" class="form-inline" style="margin: 0 auto;">
-                <input type="email" name="email" placeholder="Twój adres email..." required class="input-dark">
-                <button type="submit" class="btn" style="background: white; color: black; padding: 10px 24px;">Dołącz</button>
-            </form>
+            <form id="waitlist-form" class="form-inline" style="margin: 0 auto;">
+    <input type="email" id="waitlist-email" placeholder="Twój adres email..." required class="input-dark">
+    <button type="submit" class="btn" style="background: white; color: black; padding: 10px 24px; transition: 0.3s;">Dołącz</button>
+</form>
+
+<script>
+    document.getElementById('waitlist-form').addEventListener('submit', function(e) {
+        e.preventDefault(); // Zatrzymuje przeładowanie strony!
+        
+        const emailInput = document.getElementById('waitlist-email');
+        const email = emailInput.value;
+        const btn = this.querySelector('button');
+        
+        // Zmiana wyglądu przycisku na złoty po kliknięciu
+        btn.innerText = 'Zapisano!';
+        btn.style.background = 'var(--gold)';
+        btn.style.color = '#000';
+        emailInput.disabled = true;
+
+        // Cicha wysyłka danych do Twojego Make.com
+        fetch('https://hook.eu1.make.com/jvaw9kvi17o3rlgmaia6vltcwj36sl6y', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email, data: new Date().toLocaleString() })
+        }).catch(err => console.log('Wysłano w tle'));
+    });
+</script>
         </div>
     </section>
 

@@ -30,7 +30,7 @@
         .subtitle { font-size: 1.5rem; color: var(--gold); margin-bottom: 20px; font-weight: 600; display: block; }
 
         /* BUTTONS */
-        .btn { padding: 16px 32px; border-radius: 50px; font-weight: 600; text-decoration: none; transition: 0.3s; cursor: pointer; border: none; font-size: 1rem; display: inline-flex; align-items: center; gap: 10px; }
+        .btn { padding: 16px 32px; border-radius: 50px; font-weight: 600; text-decoration: none; transition: 0.3s; cursor: pointer; border: none; font-size: 1rem; display: inline-flex; align-items: center; gap: 10px; justify-content: center; }
         .btn-primary { background: #fff; color: #000; box-shadow: 0 0 20px rgba(255,255,255,0.2); }
         .btn-primary:hover { transform: scale(1.05); box-shadow: 0 0 40px rgba(255,255,255,0.4); }
 
@@ -89,7 +89,7 @@
         .market-number { font-size: 3.5rem; font-weight: 800; color: #fff; margin-bottom: 5px; }
         .market-label { font-size: 0.9rem; color: var(--gold); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; display: block; }
 
-        /* MAP / INVESTOR SECTION */
+        /* MAP / WAITLIST SECTION */
         .section-map { position: relative; padding: 150px 5%; text-align: center; background: #050505; overflow: hidden; }
         .map-bg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; opacity: 0.2; pointer-events: none; }
         .dot { position: absolute; width: 8px; height: 8px; background: var(--gold); border-radius: 50%; box-shadow: 0 0 10px var(--gold); animation: pulse 2s infinite; }
@@ -133,6 +133,8 @@
             .market-card { border-left: none; border-top: 2px solid var(--gold); }
             .story-box { border-left: none; border-top: 2px solid var(--gold); padding-left: 0; padding-top: 30px; }
             .nav-links { display: none; }
+            .form-inline { flex-direction: column; background: transparent; border: none; }
+            .form-inline input { padding: 15px; border-radius: 50px; background: #111; border: 1px solid #333; margin-bottom: 10px; }
         }
     </style>
 </head>
@@ -162,13 +164,9 @@
                 <p style="margin-bottom: 40px; max-width: 500px; font-size: 1.3rem;">
                     Twój osobisty asystent finansowy. Jeden interfejs, zero stresu, automatyczne oszczędności obsługiwane przez Vision AI.
                 </p>
-              <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 20px;">
-                    <a href="#map" class="btn btn-primary">
-                        Dołącz do Bety
-                    </a>
-                    <a href="#investors" class="btn" style="background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.3);">
-                        Dla Inwestorów
-                    </a>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 20px;">
+                    <a href="#map" class="btn btn-primary">Dołącz do Bety</a>
+                    <a href="#investors" class="btn" style="background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.3);">Dla Inwestorów</a>
                 </div>
             </div>
             <div class="phone-frame">
@@ -248,7 +246,7 @@
                     </svg>
                     <h3>Autonomiczne AI</h3>
                     <p style="color:#888; margin-top:10px;">
-                        Algorytmy działają w tle. ConciergePay sam analizuje faktury i znajduje oszczędności.
+                        Algorytmy działają w tle. ConciergePay sam analizuje faktury i przygotowuje koszyk płatności.
                     </p>
                 </div>
             </div>
@@ -295,7 +293,7 @@
             
             <form id="waitlist-form" class="form-inline">
                 <input type="email" id="waitlist-email" placeholder="Twój adres email..." required class="input-dark">
-                <button type="submit" id="waitlist-btn" class="btn" style="background: white; color: black; padding: 10px 24px;">Dołącz</button>
+                <button type="submit" id="waitlist-btn" class="btn" style="background: white; color: black; padding: 10px 24px;">Dołącz do Bety</button>
             </form>
         </div>
     </section>
@@ -327,7 +325,6 @@
     </footer>
 
     <script>
-       <script>
         // Animacje scrollowania
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('show-scroll'); });
@@ -382,3 +379,5 @@
             });
         });
     </script>
+</body>
+</html>

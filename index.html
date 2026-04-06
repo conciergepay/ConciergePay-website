@@ -37,6 +37,9 @@
         /* NAV */
         nav { padding: 30px 5%; display: flex; justify-content: space-between; align-items: center; position: absolute; width: 100%; z-index: 100; }
         .logo { font-weight: 700; font-size: 1.4rem; color: white; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+        .nav-links { display: flex; gap: 30px; align-items: center; }
+        .nav-links a { color: white; text-decoration: none; font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--gold); }
 
         /* HERO SECTION */
         .hero { min-height: 100vh; display: flex; align-items: center; padding: 100px 5%; position: relative; }
@@ -47,10 +50,10 @@
             position: relative; width: 350px; height: 700px; margin: 0 auto;
             border: 12px solid #1a1a1a; border-radius: 60px; background: #000;
             box-shadow: 0 0 0 2px #333, 0 50px 100px rgba(0,0,0,0.7);
-            transform: rotate(-3deg); transition: 0.5s;
+            transform: rotate(-3deg); transition: 0.5s; overflow: hidden;
         }
         .phone-frame:hover { transform: rotate(0deg) scale(1.02); }
-        .app-iframe { width: 100%; height: 100%; border: none; border-radius: 46px; background: #000; }
+        .app-iframe { width: 100%; height: 100%; border: none; border-radius: 46px; background: #000; object-fit: cover; }
 
         /* TRUST BAR */
         .trust-section { border-bottom: 1px solid #111; background: #000; padding: 30px 0; overflow: hidden; white-space: nowrap; position: relative; margin-top: -50px; z-index: 10; }
@@ -58,6 +61,13 @@
         .partner-logo { display: inline-block; margin: 0 40px; font-weight: 700; font-size: 1.5rem; color: #333; text-transform: uppercase; letter-spacing: 2px; }
         .partner-logo:hover { color: var(--gold); transition: 0.3s; }
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* STORY SECTION (NEW) */
+        .section-story { padding: 120px 5%; background: linear-gradient(180deg, #000 0%, #050505 100%); position: relative; }
+        .story-container { max-width: 900px; margin: 0 auto; border-left: 2px solid var(--gold); padding-left: 40px; position: relative; }
+        .story-container::before { content: ''; position: absolute; left: -6px; top: 0; width: 10px; height: 10px; background: var(--gold); border-radius: 50%; box-shadow: 0 0 15px var(--gold); }
+        .story-p { font-size: 1.3rem; margin-bottom: 30px; color: #bbb; line-height: 1.8; font-weight: 300; }
+        .story-highlight { color: #fff; font-weight: 500; }
 
         /* BENTO GRID */
         .section-bento { padding: 100px 5%; max-width: 1400px; margin: 0 auto; }
@@ -90,14 +100,11 @@
         .features-list li { margin-bottom: 15px; color: #999; display: flex; gap: 10px; line-height: 1.4; }
         .check { color: var(--gold); min-width: 15px; }
 
-        /* MAP SECTION */
-        .section-map { position: relative; padding: 150px 5%; text-align: center; background: #050505; overflow: hidden; }
-        .map-bg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; opacity: 0.2; pointer-events: none; }
-        .dot { position: absolute; width: 8px; height: 8px; background: var(--gold); border-radius: 50%; box-shadow: 0 0 10px var(--gold); animation: pulse 2s infinite; }
-        .d1 { top: 40%; left: 30%; animation-delay: 0s; } .d2 { top: 35%; left: 45%; animation-delay: 0.5s; }
-        .d3 { top: 50%; left: 60%; animation-delay: 1s; } .d4 { top: 45%; left: 75%; animation-delay: 1.5s; }
-        
-        /* ANIMACJE */
+        /* SCROLL REVEAL ANIMATIONS */
+        .hidden-scroll { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+        .show-scroll { opacity: 1; transform: translateY(0); }
+
+        /* ANIMACJE SVG */
         .ai-pulse { animation: pulse-ring 3s infinite; transform-origin: center; }
         .ai-net { animation: dash 5s linear infinite; stroke-dasharray: 5; }
         .shield-lock { animation: lock-bounce 2s infinite ease-in-out; transform-origin: center; }
@@ -113,12 +120,15 @@
         @keyframes tap { 0%, 100% { transform: scale(1); } 50% { transform: scale(0.9); } }
         @keyframes draw-chart { 0% { stroke-dashoffset: 30; } 40%, 100% { stroke-dashoffset: 0; } }
         @keyframes fade-in-arrow { 0%, 30% { opacity: 0; } 40%, 100% { opacity: 1; } }
-        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(3); opacity: 0; } }
 
-        /* FOOTER */
-        footer { border-top: 1px solid #111; padding: 80px 5%; margin-top: 50px; display: grid; grid-template-columns: 1fr 1fr; gap: 50px; }
+        /* MAP / WAITLIST SECTION */
+        .section-map { position: relative; padding: 150px 5%; text-align: center; background: #050505; overflow: hidden; }
+        .map-bg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; opacity: 0.2; pointer-events: none; }
         .form-inline { display: flex; gap: 10px; background: #111; padding: 6px; border-radius: 50px; max-width: 400px; border: 1px solid #333; }
         .input-dark { background: transparent; border: none; flex: 1; padding: 0 20px; color: white; outline: none; }
+
+        /* FOOTER */
+        footer { border-top: 1px solid #111; padding: 80px 5%; display: grid; grid-template-columns: 1fr 1fr; gap: 50px; background: #000; }
 
         @media (max-width: 1024px) {
             h1 { font-size: 3rem; }
@@ -127,6 +137,7 @@
             .bento-grid { grid-template-columns: 1fr; }
             .card-large { grid-column: span 1; }
             .market-card { border-left: none; border-top: 2px solid var(--gold); }
+            .nav-links { display: none; }
         }
     </style>
 </head>
@@ -140,31 +151,35 @@
     </div>
 
     <nav>
-        <a href="#" class="logo"><img src="assets/conciergepaylogo.png" height="30" style="margin-right:10px;"> ConciergePay</a>
-        <a href="#market" class="btn" style="background: rgba(255,255,255,0.1); color: #fff;">Dla Inwestorów</a>
+        <a href="#" class="logo"><img src="assets/conciergepaylogo.png" height="30" style="margin-right:10px;" alt="Logo"> ConciergePay</a>
+        <div class="nav-links">
+            <a href="#story">Nasza Historia</a>
+            <a href="#market">Model Biznesowy</a>
+            <a href="#investors" class="btn" style="background: rgba(255,255,255,0.1); color: #fff; padding: 10px 24px;">Dla Inwestorów</a>
+        </div>
     </nav>
 
-    <section class="hero">
+    <section class="hero hidden-scroll">
         <div class="hero-grid">
             <div>
                 <span class="subtitle">ConciergePay</span>
                 <h1>Wyobraź sobie życie <br><span class="gradient-text">bez myślenia o rachunkach.</span></h1>
                 <p style="margin-bottom: 40px; max-width: 500px; font-size: 1.3rem;">
-                    Twój osobisty asystent finansowy. Jeden interfejs, zero stresu, automatyczne oszczędności.
+                    Twój osobisty asystent finansowy. Jeden interfejs, zero stresu, automatyczne oszczędności obsługiwane przez Vision AI.
                 </p>
                 <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-    <a href="mailto:b4ozl2b3r63hegj0gs5prq19pnvc5jsm@hook.eu1.make.com?subject=Test%20AI%20ConciergePay" class="btn btn-primary">
-        Try Me - Wyślij fakturę
-    </a>
-</div>  
+                    <a href="mailto:b4ozl2b3r63hegj0gs5prq19pnvc5jsm@hook.eu1.make.com?subject=Test%20AI%20ConciergePay" class="btn btn-primary">
+                        Try Me - Wyślij fakturę
+                    </a>
+                </div>
             </div>
             <div class="phone-frame">
-                <iframe src="app/index.html" class="app-iframe" title="App Demo"></iframe>
+                <img src="https://images.unsplash.com/photo-1616803140344-6682afb13cda?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="app-iframe" alt="ConciergePay UI Demo">
             </div>
         </div>
     </section>
 
-    <div class="trust-section">
+    <div class="trust-section hidden-scroll">
         <div class="trust-track">
             <span class="partner-logo">Visa</span>
             <span class="partner-logo">Mastercard</span>
@@ -176,14 +191,28 @@
             <span class="partner-logo">Visa</span>
             <span class="partner-logo">Mastercard</span>
             <span class="partner-logo">Plaid</span>
-            <span class="partner-logo">Stripe</span>
-            <span class="partner-logo">J.P. Morgan</span>
-            <span class="partner-logo">Goldman Sachs</span>
-            <span class="partner-logo">Revolut</span>
         </div>
     </div>
 
-    <section id="market" class="section-market">
+    <section id="story" class="section-story hidden-scroll">
+        <div class="story-container">
+            <h2 style="font-size: 3rem; margin-bottom: 40px;">Era absurdów <span class="gold">dobiega końca.</span></h2>
+            <p class="story-p">
+                Wszystko zaczęło się od narastającej frustracji. W erze, w której sztuczna inteligencja potrafi napisać skomplikowany kod w kilka sekund i wygenerować fotorealistyczny film, my wciąż spędzamy wieczory na <span class="story-highlight">resetowaniu haseł do portali dostawców prądu</span> i uważnym przepisywaniu 26-cyfrowych numerów kont.
+            </p>
+            <p class="story-p">
+                Zrozumieliśmy, że współczesna bankowość zatrzymała się w miejscu. Banki dały nam genialne narzędzia do dokonywania płatności, ale nie zdjęły z nas <span class="story-highlight">mentalnego ciężaru zarządzania nimi</span>. Jesteśmy zmuszani do bycia księgowymi własnego życia domowego.
+            </p>
+            <p class="story-p">
+                ConciergePay nie jest kolejną aplikacją do rysowania wykresów kołowych z Twoich wydatków. To <span class="story-highlight">manifest odzyskanego czasu</span>. To niewidzialna warstwa inteligentnej technologii, która staje pomiędzy Tobą a korporacyjną biurokracją dostawców mediów. 
+            </p>
+            <p class="story-p" style="color: var(--gold); font-weight: 500; font-size: 1.5rem; margin-top: 40px;">
+                Ty po prostu żyjesz. Nasze AI zajmuje się resztą.
+            </p>
+        </div>
+    </section>
+
+    <section id="market" class="section-market hidden-scroll">
         <div class="market-container">
             <h2 style="margin-bottom: 10px;">Potencjał Rynku <span class="gold">w Polsce</span></h2>
             <p>Ogromny rynek gotowy na innowację.</p>
@@ -197,18 +226,18 @@
                 <div class="market-card">
                     <span class="market-label">Poziom 2 (SAM)</span>
                     <div class="market-number">25.3 <span style="font-size:1.5rem">mln</span></div>
-                    <p style="font-size:0.9rem; color:#999;">Aktywnych użytkowników bankowości mobilnej. To osoby, do których realnie dotrzemy.</p>
+                    <p style="font-size:0.9rem; color:#999;">Aktywnych użytkowników bankowości mobilnej. Realna grupa odbiorców.</p>
                 </div>
                 <div class="market-card" style="background: linear-gradient(90deg, rgba(212,175,55,0.15), transparent); border-left: 4px solid var(--gold);">
                     <span class="market-label">Poziom 3 (SOM)</span>
                     <div class="market-number">250 <span style="font-size:1.5rem">tys.</span></div>
-                    <p style="font-size:0.9rem; color:#fff;">Nasz cel na pierwsze 3 lata (~1% SAM). To nasz realistyczny cel do osiągnięcia.</p>
+                    <p style="font-size:0.9rem; color:#fff;">Cel na pierwsze 3 lata (~1% SAM). Realistyczny pułap przychodowy.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="section-bento">
+    <section class="section-bento hidden-scroll">
         <h2 style="text-align: center;">Technologia <span class="gold">Jutra</span></h2>
         <div class="bento-grid">
             <div class="bento-card card-large" style="background: linear-gradient(135deg, #151515, #050505);">
@@ -220,7 +249,7 @@
                     </svg>
                     <h3>Autonomiczne AI</h3>
                     <p style="color:#888; margin-top:10px;">
-                        Algorytmy działają w tle. ConciergePay sam loguje się do BOK (Play, Orange, E.ON), analizuje faktury i znajduje oszczędności.
+                        Algorytmy działają w tle. Wystarczy przesłać fakturę, a Vision AI samodzielnie odczyta dane i przygotuje koszyk przelewów bez ryzyka pomyłki.
                     </p>
                 </div>
             </div>
@@ -230,7 +259,7 @@
                     <path class="shield-lock" d="M12 11V8M12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11ZM12 8C11.4477 8 11 8.44772 11 9V11H13V9C13 8.44772 12.5523 8 12 8Z" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round"/>
                 </svg>
                 <h3>Bezpieczeństwo</h3>
-                <p style="color:#888; font-size:0.9rem;">Szyfrowanie AES-256 i tokenizacja płatności.</p>
+                <p style="color:#888; font-size:0.9rem;">Pełna zgodność z regulacjami PSD2 i Open Banking.</p>
             </div>
             <div class="bento-card">
                 <svg class="bento-icon-svg svg-pay" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -240,7 +269,7 @@
                     <circle class="pay-ripple" cx="17.5" cy="17.5" r="3" stroke="var(--gold)" stroke-opacity="0.5"/>
                 </svg>
                 <h3>One-Click Pay</h3>
-                <p style="color:#888; font-size:0.9rem;">Opłać 15 rachunków w 3 sekundy.</p>
+                <p style="color:#888; font-size:0.9rem;">Frictionless experience. Opłać 15 rachunków jednym kliknięciem z bufora.</p>
             </div>
             <div class="bento-card card-large">
                 <svg class="bento-icon-svg svg-chart" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -250,93 +279,33 @@
                     <path d="M3 5V19" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
                 </svg>
                 <h3>Analityka Predykcyjna</h3>
-                <p style="color:#888;">System przewiduje przyszłe wydatki i ostrzega przed przekroczeniem budżetu.</p>
+                <p style="color:#888;">System przewiduje przyszłe wydatki na bazie historii i automatycznie podpowiada tańszych dostawców mediów.</p>
             </div>
         </div>
     </section>
 
-    <section id="pricing" class="section-pricing">
-        <h2 style="margin-bottom: 10px;">Business <span class="gold">Model</span></h2>
-        <p>Prosty i skalowalny model biznesowy.</p>
-
-        <div class="pricing-grid">
-            <div class="pricing-card">
-                <h3 style="color:#fff;">ConciergePay Free</h3>
-                <div class="price">0 zł<span> (Freemium)</span></div>
-                <p style="font-size: 0.9rem; color: #999;">Budowanie bazy użytkowników.</p>
-                <ul class="features-list">
-                    <li><span class="check">✓</span> Podstawowe funkcje</li>
-                    <li><span class="check">✓</span> Ręczne dodawanie rachunków</li>
-                    <li><span class="check">✓</span> Przypomnienia o płatnościach</li>
-                </ul>
-            </div>
-
-            <div class="pricing-card featured">
-                <div class="badge-popular" style="background:var(--gold); color:#000; position:absolute; top:-15px; left:50%; transform:translateX(-50%); padding:5px 15px; border-radius:20px; font-weight:700; font-size:12px;">SUBSKRYPCJA</div>
-                <h3 style="color:var(--gold);">ConciergePay Pro</h3>
-                <div class="price">12,99 zł<span>/mies.</span></div>
-                <p style="font-size: 0.9rem; color: #fff;">Dla użytkowników ceniących czas.</p>
-                <ul class="features-list">
-                    <li><span class="check">✓</span> Pełna moc automatyzacji</li>
-                    <li><span class="check">✓</span> Automatyczna agregacja</li>
-                    <li><span class="check">✓</span> Inteligentne płatności</li>
-                    <li><span class="check">✓</span> Sugestie oszczędności</li>
-                </ul>
-                <a href="#map" class="btn btn-primary" style="width:100%; justify-content:center;">Wybierz Pro</a>
-            </div>
-
-            <div class="pricing-card">
-                <h3 style="color:#fff;">Prowizje Partnerskie</h3>
-                <div class="price">B2B<span>/lead</span></div>
-                <p style="font-size: 0.9rem; color: #999;">Monetyzacja backendowa.</p>
-                <ul class="features-list">
-                    <li><span class="check">✓</span> Prowizje od dostawców (energia, telco)</li>
-                    <li><span class="check">✓</span> Prowizje od ubezpieczycieli</li>
-                    <li><span class="check">✓</span> Gdy użytkownik zmienia ofertę</li>
-                </ul>
-            </div>
-        </div>
+    <section id="investors" class="hidden-scroll" style="padding: 100px 5%; background: #050505; border-top: 1px solid #1a1a1a; text-align: center;">
+        <h2 style="margin-bottom: 20px;">Dostęp do <span class="gold">Data Roomu</span></h2>
+        <p style="color: #888; max-width: 600px; margin: 0 auto 40px; line-height: 1.6;">
+            Przygotowujemy rundę Pre-Seed (1.5M PLN). Zostaw swój adres email, aby automatycznie otrzymać nasz One-Pager, cap table oraz zaproszenie na prywatne Live Demo naszego silnika AI.
+        </p>
+        
+        <form id="investor-form" class="form-inline" style="margin: 0 auto; border-color: var(--gold); max-width: 500px;">
+            <input type="email" id="investor-email" placeholder="Email anioła biznesu / funduszu VC..." required class="input-dark">
+            <button type="submit" id="investor-btn" class="btn" style="background: var(--gold); color: black; padding: 12px 28px;">Pobierz Pitch Deck</button>
+        </form>
     </section>
 
-    <section id="map" class="section-map">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg" class="map-bg" style="filter: invert(1) opacity(0.2);">
-        <div class="dot d1"></div> <div class="dot d2"></div> <div class="dot d3"></div> <div class="dot d4"></div>
+    <section id="waitlist" class="section-map hidden-scroll">
+        <h2 style="font-size: 3rem; position: relative; z-index: 2;">Zmień sposób płacenia.</h2>
+        <p style="margin: 0 auto 40px; max-width: 600px; position: relative; z-index: 2;">
+            Zapisz się do listy oczekujących i zyskaj 6 miesięcy pakietu Pro za darmo w dniu premiery.
+        </p>
         
-        <div style="position: relative; z-index: 2;">
-            <h2 style="font-size: 3.5rem;">Globalna Infrastruktura</h2>
-            <p style="margin: 0 auto 40px; max-width: 600px;">
-                Obsługujemy 4,500 dostawców mediów w Europie i USA. <br>
-                Zintegrowani z systemem bankowym przez Open Banking API.
-            </p>
-            
-            <form id="waitlist-form" class="form-inline" style="margin: 0 auto;">
-    <input type="email" id="waitlist-email" placeholder="Twój adres email..." required class="input-dark">
-    <button type="submit" class="btn" style="background: white; color: black; padding: 10px 24px; transition: 0.3s;">Dołącz</button>
-</form>
-
-<script>
-    document.getElementById('waitlist-form').addEventListener('submit', function(e) {
-        e.preventDefault(); // Zatrzymuje przeładowanie strony!
-        
-        const emailInput = document.getElementById('waitlist-email');
-        const email = emailInput.value;
-        const btn = this.querySelector('button');
-        
-        // Zmiana wyglądu przycisku na złoty po kliknięciu
-        btn.innerText = 'Zapisano!';
-        btn.style.background = 'var(--gold)';
-        btn.style.color = '#000';
-        emailInput.disabled = true;
-
-        // Cicha wysyłka danych do Twojego Make.com
-        fetch('https://hook.eu1.make.com/jvaw9kvi17o3rlgmaia6vltcwj36sl6y', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: email, data: new Date().toLocaleString() })
-        }).catch(err => console.log('Wysłano w tle'));
-    });
-</script>
-        </div>
+        <form id="waitlist-form" class="form-inline" style="margin: 0 auto; position: relative; z-index: 2;">
+            <input type="email" id="waitlist-email" placeholder="Twój prywatny adres email..." required class="input-dark">
+            <button type="submit" id="waitlist-btn" class="btn" style="background: white; color: black; padding: 10px 24px;">Dołącz do Bety</button>
+        </form>
     </section>
 
     <footer>
@@ -353,5 +322,56 @@
         </div>
     </footer>
 
+    <script>
+        // --- ANIMACJE SCROLLOWANIA ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('show-scroll');
+                }
+            });
+        }, { threshold: 0.1 }); 
+
+        document.querySelectorAll('.hidden-scroll').forEach((el) => {
+            observer.observe(el);
+        });
+
+        // --- OBSŁUGA FORMULARZA INWESTORSKIEGO ---
+        document.getElementById('investor-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('investor-email').value;
+            const btn = document.getElementById('investor-btn');
+            
+            btn.innerText = 'Wysłano na maila!';
+            btn.style.background = '#fff';
+            document.getElementById('investor-email').disabled = true;
+
+            // UWAGA: Tu wklej link do webhooka dla inwestorów
+            fetch('TWÓJ_WEBHOOK_INWESTORZY', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email, type: 'investor', date: new Date().toLocaleString() })
+            }).catch(err => console.log('Wysłano lead inwestorski'));
+        });
+
+        // --- OBSŁUGA FORMULARZA WAITLISTY (UŻYTKOWNICY) ---
+        document.getElementById('waitlist-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('waitlist-email').value;
+            const btn = document.getElementById('waitlist-btn');
+            
+            btn.innerText = 'Jesteś na liście!';
+            btn.style.background = 'var(--gold)';
+            btn.style.color = '#000';
+            document.getElementById('waitlist-email').disabled = true;
+
+            // UWAGA: Tu wklej link do webhooka dla waitlisty (który masz już w Make.com)
+            fetch('TWÓJ_WEBHOOK_WAITLISTA', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email, type: 'user', date: new Date().toLocaleString() })
+            }).catch(err => console.log('Wysłano zapis na waitlistę'));
+        });
+    </script>
 </body>
 </html>

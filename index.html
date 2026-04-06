@@ -324,40 +324,58 @@
     </footer>
 
     <script>
+       <script>
         // Animacje scrollowania
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('show-scroll'); });
         }, { threshold: 0.1 });
         document.querySelectorAll('.hidden-scroll').forEach(el => observer.observe(el));
 
-        // Formularz Waitlisty
+        // Formularz Waitlisty -> Bezpośrednio na Gmail
         document.getElementById('waitlist-form').addEventListener('submit', function(e) {
             e.preventDefault();
             const email = document.getElementById('waitlist-email').value;
             const btn = document.getElementById('waitlist-btn');
+            
             btn.innerText = 'Zapisano!';
             btn.style.background = 'var(--gold)';
             btn.style.color = '#000';
             
-            fetch('https://hook.eu1.make.com/jvaw9kvi17o3rlgmaia6vltcwj36sl6y', {
-                method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: email })
+            fetch("https://formsubmit.co/ajax/conciergepay@gmail.com", {
+                method: "POST",
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    _subject: "🔥 Nowy użytkownik Waitlisty!",
+                    email: email,
+                    typ: "Użytkownik Beta"
+                })
             });
         });
 
-        // Formularz Inwestorów
+        // Formularz Inwestorów -> Bezpośrednio na Gmail
         document.getElementById('investor-form').addEventListener('submit', function(e) {
             e.preventDefault();
             const email = document.getElementById('investor-email').value;
             const btn = document.getElementById('investor-btn');
+            
             btn.innerText = 'Wysłano!';
             btn.style.background = '#fff';
+            btn.style.color = '#000';
             
-            fetch('https://hook.eu1.make.com/jvaw9kvi17o3rlgmaia6vltcwj36sl6y', {
-                method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: email })
+            fetch("https://formsubmit.co/ajax/conciergepay@gmail.com", {
+                method: "POST",
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    _subject: "💰 NOWY INWESTOR - PITCH DECK!",
+                    email: email,
+                    typ: "Inwestor VC / Anioł Biznesu"
+                })
             });
         });
     </script>
-</body>
-</html>

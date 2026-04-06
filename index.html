@@ -60,7 +60,6 @@
         .trust-track { display: inline-block; animation: scroll 20s linear infinite; }
         .partner-logo { display: inline-block; margin: 0 40px; font-weight: 700; font-size: 1.5rem; color: #333; text-transform: uppercase; letter-spacing: 2px; }
         .partner-logo:hover { color: var(--gold); transition: 0.3s; }
-        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
         /* STORY SECTION */
         .section-story { padding: 120px 5%; background: linear-gradient(180deg, #000 0%, #050505 100%); position: relative; }
@@ -100,15 +99,12 @@
         .hidden-scroll { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
         .show-scroll { opacity: 1; transform: translateY(0); }
 
-        /* ANIMACJE SVG */
-        .ai-pulse { animation: pulse-ring 3s infinite; transform-origin: center; }
-        .ai-net { animation: dash 5s linear infinite; stroke-dasharray: 5; }
-        .shield-lock { animation: lock-bounce 2s infinite ease-in-out; transform-origin: center; }
-        .pay-ripple { animation: ripple 1.5s infinite; transform-origin: 17.5px 17.5px; }
-        .pay-tap { animation: tap 1.5s infinite; transform-origin: center; }
-        .chart-line { stroke-dasharray: 30; stroke-dashoffset: 30; animation: draw-chart 3s ease-out forwards infinite; }
-        .chart-arrow { opacity: 0; animation: fade-in-arrow 3s ease-out forwards infinite; }
-
+        /* ANIMACJA STARTOWA DLA HERO (ZAMIENIA BŁĄD Z UKRYWANIEM) */
+        .fade-in-up { animation: fadeInUp 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* ANIMACJE SVG I INNE */
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         @keyframes pulse-ring { 0% { transform: scale(0.8); opacity: 0.5; } 100% { transform: scale(1.5); opacity: 0; } }
         @keyframes dash { to { stroke-dashoffset: -20; } }
         @keyframes lock-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
@@ -117,6 +113,15 @@
         @keyframes draw-chart { 0% { stroke-dashoffset: 30; } 40%, 100% { stroke-dashoffset: 0; } }
         @keyframes fade-in-arrow { 0%, 30% { opacity: 0; } 40%, 100% { opacity: 1; } }
         @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(3); opacity: 0; } }
+
+        /* ANIMACJE KLAS SVG */
+        .ai-pulse { animation: pulse-ring 3s infinite; transform-origin: center; }
+        .ai-net { animation: dash 5s linear infinite; stroke-dasharray: 5; }
+        .shield-lock { animation: lock-bounce 2s infinite ease-in-out; transform-origin: center; }
+        .pay-ripple { animation: ripple 1.5s infinite; transform-origin: 17.5px 17.5px; }
+        .pay-tap { animation: tap 1.5s infinite; transform-origin: center; }
+        .chart-line { stroke-dasharray: 30; stroke-dashoffset: 30; animation: draw-chart 3s ease-out forwards infinite; }
+        .chart-arrow { opacity: 0; animation: fade-in-arrow 3s ease-out forwards infinite; }
 
         .form-inline { display: flex; gap: 10px; background: #111; padding: 6px; border-radius: 50px; max-width: 500px; border: 1px solid #333; margin: 0 auto; }
         .input-dark { background: transparent; border: none; flex: 1; padding: 0 20px; color: white; outline: none; }
@@ -147,7 +152,7 @@
         <div class="hero-overlay"></div>
     </div>
 
-    <nav>
+    <nav class="fade-in-up" style="animation-delay: 0.1s;">
         <a href="#" class="logo"><img src="assets/conciergepaylogo.png" height="30" style="margin-right:10px;"> ConciergePay</a>
         <div class="nav-links">
             <a href="#story">Nasza Historia</a>
@@ -156,8 +161,8 @@
         </div>
     </nav>
 
-    <section class="hero hidden-scroll">
-        <div class="hero-grid">
+    <section class="hero">
+        <div class="hero-grid fade-in-up" style="animation-delay: 0.3s;">
             <div>
                 <span class="subtitle">ConciergePay</span>
                 <h1>Wyobraź sobie życie <br><span class="gradient-text">bez myślenia o rachunkach.</span></h1>
